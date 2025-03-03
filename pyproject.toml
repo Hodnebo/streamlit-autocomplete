@@ -1,6 +1,6 @@
 [project]
 name = "streamlit-autocomplete"
-version = "1.1.1"
+version = "1.0.0"
 description = "Streamlit component for text input with autocomplete suggestions"
 readme = "README.md"
 requires-python = ">=3.9"
@@ -12,7 +12,7 @@ build-backend = "setuptools.build_meta"
 
 [project.optional-dependencies]
 release = [ "toml",]
-examples = [ "azure-identity", "openai", "python-dotenv" ]
+examples = [ "azure-identity", "openai", "python-dotenv",]
 
 [tool.setuptools]
 packages = [ "st_autocomplete",]

@@ -1,3 +1,10 @@
+# 1.0.0 (2025-03-03)
+
+
+### Features
+
+* initial commit ([603b0cc](https://github.com/Hodnebo/streamlit-autocomplete/commit/603b0cccef69e019d4f2e762e01ab19831c86a1c))
+
 ## [1.1.1](https://github.com/Hodnebo/streamlit-autocomplete/compare/v1.1.0...v1.1.1) (2025-03-03)
 
 
