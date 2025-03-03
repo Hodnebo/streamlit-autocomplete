@@ -1,0 +1,7 @@
+env
+*.egg-info
+.idea
+*.pyc
+node_modules
+.env
+/build

@@ -1,0 +1,20 @@
+# Include the React build files
+recursive-include st_autocomplete/frontend/build *
+
+# Include the README and LICENSE files
+include README.md
+include LICENSE
+
+# Include the CHANGELOG
+include CHANGELOG.md
+
+# Include any Python files that might be excluded
+recursive-include st_autocomplete *.py
+
+# Exclude unnecessary files
+exclude *.sh
+exclude .github
+recursive-exclude .github *
+recursive-exclude __pycache__ *
+recursive-exclude *.egg-info *
+recursive-exclude st_autocomplete/frontend/node_modules * 

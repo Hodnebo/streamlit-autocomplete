@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta
+      name="description"
+      content="Streamlit Autocomplete Component"
+    />
+    <title>Streamlit Autocomplete Component</title>
+    <style>
+      /* Global styles for the component */
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+          'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+          sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+
+      /* Ensure the iframe has sufficient height */
+      iframe.stCustomComponentV1 {
+        min-height: 60px !important;
+        overflow: visible !important;
+      }
+      
+      /* Ensure suggestions are visible */
+      .suggestions-dropdown {
+        z-index: 9999 !important;
+        position: absolute !important;
+        background-color: white !important;
+        border: 1px solid #ccc !important;
+        border-radius: 4px !important;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2) !important;
+        max-height: 300px !important;
+        overflow-y: auto !important;
+        width: 100% !important;
+      }
+    </style>
+    <script>
+      // Script to help with iframe visibility issues
+      window.addEventListener('load', function() {
+        // Try to modify the parent iframe if possible
+        try {
+          if (window.parent && window.parent.document) {
+            // Find our iframe in the parent document
+            setTimeout(function() {
+              const iframes = window.parent.document.querySelectorAll('iframe.stCustomComponentV1');
+              iframes.forEach(iframe => {
+                // Set overflow to visible to allow content to flow outside the iframe
+                iframe.style.overflow = 'visible';
+                // Ensure the iframe has sufficient height
+                if (iframe.height === '0') {
+                  iframe.height = '60';
+                }
+              });
+            }, 100);
+          }
+        } catch (e) {
+          console.error('Error modifying parent iframe:', e);
+        }
+      });
+    </script>
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+    <div id="suggestions-portal"></div>
+  </body>
+</html> 
