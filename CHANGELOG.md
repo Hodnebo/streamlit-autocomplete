@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/Hodnebo/streamlit-autocomplete/compare/v1.0.0...v1.0.1) (2025-03-03)
+
+
+### Bug Fixes
+
+* remove duplicate release config without static frontend build files ([f953d80](https://github.com/Hodnebo/streamlit-autocomplete/commit/f953d807394f2161c1d7354eb2cd2017e61b6ce2))
+
 # 1.0.0 (2025-03-03)
 
 
