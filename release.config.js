@@ -7,6 +7,9 @@ module.exports = {
     ['@semantic-release/github', {
       draftRelease: false,
       releasedLabels: false,
+      successComment: "This release is available as ${nextRelease.version}",
+      failTitle: "The automated release failed",
+      failComment: "The automated release failed. Please check the workflow run for details."
     }],
     [
       "@semantic-release/exec", {
@@ -19,7 +22,7 @@ module.exports = {
         assets: [
           'pyproject.toml', 
           'CHANGELOG.md',
-          'st_autocomplete/frontend/build/**/*',
+          'st_autocomplete/frontend/build/**',
           'st_autocomplete/**/*.py'
         ],
         message: 'chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}'
