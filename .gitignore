@@ -4,4 +4,8 @@ env
 *.pyc
 node_modules
 .env
-/build
+build
+
+# DO NOT ignore frontend build files - they are needed for the package
+!st_autocomplete/frontend/build/
+!st_autocomplete/frontend/build/**/*

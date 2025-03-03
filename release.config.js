@@ -22,7 +22,7 @@ module.exports = {
         assets: [
           'pyproject.toml', 
           'CHANGELOG.md',
-          'st_autocomplete/frontend/build/**',
+          'st_autocomplete/frontend/build/**/*',
           'st_autocomplete/**/*.py'
         ],
         message: 'chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}'
