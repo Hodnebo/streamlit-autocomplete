@@ -1,9 +1,8 @@
 import { useState, useEffect, useCallback } from 'react';
-import { 
-  findTriggerInfo, 
-  filterSuggestions, 
-  formatSuggestionForInsertion, 
-  calculateCursorPosition 
+import {
+  findTriggerInfo,
+  formatSuggestionForInsertion,
+  calculateCursorPosition, filterSuggestions
 } from '../utils/autocompleteUtils';
 
 /**

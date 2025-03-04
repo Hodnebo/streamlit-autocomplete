@@ -3,7 +3,6 @@ import {
   formatSuggestionForInsertion, 
   calculateCursorPosition,
   filterSuggestions,
-  filterSuggestionsBasedOnQuery,
   ZERO_WIDTH_SPACE
 } from '../../utils/autocompleteUtils';
 
@@ -89,45 +88,6 @@ describe('calculateCursorPosition', () => {
 });
 
 describe('filterSuggestions', () => {
-  const suggestions = ['apple', 'banana', 'application', 'orange', 'apply'];
-  
-  test('returns all suggestions when query is empty', () => {
-    const result = filterSuggestions(suggestions, '');
-    expect(result).toEqual(suggestions);
-  });
-
-  test('finds exact matches with highest priority', () => {
-    const result = filterSuggestions(suggestions, 'apple');
-    expect(result[0]).toBe('apple');
-  });
-
-  test('finds suggestions that start with query', () => {
-    const result = filterSuggestions(suggestions, 'app');
-    expect(result).toContain('apple');
-    expect(result).toContain('application');
-    expect(result).toContain('apply');
-    // Check that 'apple' comes before 'application' (shorter match first)
-    expect(result.indexOf('apple')).toBeLessThan(result.indexOf('application'));
-  });
-
-  test('finds suggestions that contain query', () => {
-    const result = filterSuggestions(suggestions, 'an');
-    expect(result).toContain('banana');
-    expect(result).toContain('orange');
-  });
-
-  test('returns empty array when no matches found', () => {
-    const result = filterSuggestions(suggestions, 'xyz');
-    expect(result).toEqual([]);
-  });
-
-  test('is case insensitive', () => {
-    const result = filterSuggestions(suggestions, 'APPle');
-    expect(result[0]).toBe('apple');
-  });
-});
-
-describe('filterSuggestionsBasedOnQuery', () => {
   const suggestions = [
     'React', 
     'React Native', 
@@ -138,17 +98,17 @@ describe('filterSuggestionsBasedOnQuery', () => {
   ];
   
   test('returns all suggestions when query is empty', () => {
-    const result = filterSuggestionsBasedOnQuery(suggestions, '');
+    const result = filterSuggestions(suggestions, '');
     expect(result).toEqual(suggestions);
   });
 
   test('finds exact matches with highest priority', () => {
-    const result = filterSuggestionsBasedOnQuery(suggestions, 'React');
+    const result = filterSuggestions(suggestions, 'React');
     expect(result[0]).toBe('React');
   });
 
   test('finds suggestions that start with query (with spaces)', () => {
-    const result = filterSuggestionsBasedOnQuery(suggestions, 'React');
+    const result = filterSuggestions(suggestions, 'React');
     expect(result).toContain('React');
     expect(result).toContain('React Native');
     // Check that 'React' comes before 'React Native'
@@ -156,23 +116,29 @@ describe('filterSuggestionsBasedOnQuery', () => {
   });
 
   test('finds suggestions with normalized matching (ignoring spaces)', () => {
-    const result = filterSuggestionsBasedOnQuery(suggestions, 'reactna');
+    const result = filterSuggestions(suggestions, 'reactna');
     expect(result).toContain('React Native');
   });
 
+  test('finds suggestions with non-subsequent characters', () => {
+    const result = filterSuggestions(suggestions, 'scrp');
+    expect(result).toContain('JavaScript');
+    expect(result).toContain('TypeScript');
+  });
+
   test('finds suggestions with word-by-word matching', () => {
-    const result = filterSuggestionsBasedOnQuery(suggestions, 'script');
+    const result = filterSuggestions(suggestions, 'script');
     expect(result).toContain('JavaScript');
     expect(result).toContain('TypeScript');
   });
 
   test('returns empty array when no matches found', () => {
-    const result = filterSuggestionsBasedOnQuery(suggestions, 'python');
+    const result = filterSuggestions(suggestions, 'python');
     expect(result).toEqual([]);
   });
 
   test('is case insensitive', () => {
-    const result = filterSuggestionsBasedOnQuery(suggestions, 'javascript');
+    const result = filterSuggestions(suggestions, 'javascript');
     expect(result).toContain('JavaScript');
   });
 }); 

@@ -70,6 +70,7 @@ tags = [
     "question", "help", "issue", "feature", "bug", "documentation",
     "enhancement", "support", "avtale: ansatt pluss", "task: urgent",
     "area: frontend", "status: ready",
+    "react", "javascript", "typescript", "python", "java", "c++",
 ]
 
 
