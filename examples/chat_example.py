@@ -54,7 +54,7 @@ def handle_message(message: str):
             st.markdown(user_message["content"])
         with st.chat_message("assistant", avatar="🤖"):
             answer = st.write_stream(get_streaming_response(message))
-    st.session_state.messages.append({"role": "assistant", "content": answer[-1]})
+    st.session_state.messages.append({"role": "assistant", "content": answer})
 
 
 def display_previous():

@@ -35,7 +35,7 @@ export const Autocomplete: React.FC<AutocompleteProps> = (props: AutocompletePro
     handleChange, 
     handleSubmit,
     setValueAndCursor 
-  } = useInputValue(args.value, args.debounce, args.update_on_change);
+  } = useInputValue(args.value);
   
   const {
     showSuggestions,

@@ -26,7 +26,6 @@ def st_autocomplete(
         trigger_chars: List[str] = ["#", "@"],
         suggestions: SuggestionDict = {"#": [], "@": []},
         key: Optional[str] = None,
-        debounce: Optional[int] = None,
         on_change: Optional[CallbackFunction] = None,
         on_submit: Optional[CallbackFunction] = None,
         args: Optional[CallbackArgs] = None,
@@ -38,7 +37,6 @@ def st_autocomplete(
         position: Position = "static",
         width: str = "100%",
         dropdown_direction: DropdownDirection = "down",
-        update_on_change: bool = False,
         tag_styles: Optional[Dict[str, Dict[str, str]]] = None,
 ) -> str:
     """
@@ -58,8 +56,6 @@ def st_autocomplete(
         An optional key that uniquely identifies this component. If this is
         None, and the component's arguments are changed, the component will
         be re-mounted in the Streamlit frontend and lose its current state.
-    debounce : int or None
-        The number of milliseconds to wait before triggering the on_change callback.
     on_change : callable or None
         An optional callback invoked when this text input's value changes.
     on_submit : callable or None
@@ -85,9 +81,6 @@ def st_autocomplete(
     dropdown_direction : "up" or "down"
         Direction for the suggestions dropdown. "down" shows suggestions below the input (default),
         "up" shows suggestions above the input.
-    update_on_change : bool
-        Whether to update Streamlit on every keystroke (True) or only on submit/enter (False).
-        Set to False to avoid interrupting streaming or long-running operations.
     tag_styles : Dict[str, Dict[str, str]] or None
         Optional dictionary to customize the appearance of tags for each trigger character.
         The keys should be trigger characters, and the values are dictionaries with
@@ -123,14 +116,12 @@ def st_autocomplete(
         trigger_chars=trigger_chars,
         suggestions=suggestions,
         key=key,
-        debounce=debounce,
         placeholder=placeholder,
         disabled=disabled,
         label_visibility=label_visibility,
         position=position,
         width=width,
         dropdown_direction=dropdown_direction,
-        update_on_change=update_on_change,
         on_submit=on_submit is not None,
         tag_styles=tag_styles,
         default=current_value,
