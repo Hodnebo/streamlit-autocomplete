@@ -28,13 +28,3 @@ npm install
 echo "Building frontend..."
 # Set CI=false to prevent warnings from being treated as errors
 CI=false DISABLE_ESLINT_PLUGIN=true npm run build
-
-# Navigate back to the root directory
-cd ../..
-
-# Install the Python package in development mode using pip with the pyproject.toml
-echo "Installing Python package in development mode..."
-pip install -e .
-
-echo "Build completed successfully!"
-echo "You can now import the component with: from st_autocomplete import st_autocomplete"
