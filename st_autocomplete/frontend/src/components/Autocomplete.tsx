@@ -24,35 +24,18 @@ export const Autocomplete: React.FC<AutocompleteProps> = (props: AutocompletePro
   const suggestionsRef = useRef<HTMLDivElement>(null);
   const isFirstRender = useRef(true);
   
-  // Extract props with defaults
-  const {
-    label = "",
-    value = "",
-    trigger_chars = ["#", "@"],
-    suggestions = {},
-    debounce = null,
-    placeholder = "",
-    disabled = false,
-    label_visibility = "visible",
-    position = "static",
-    width = "100%",
-    dropdown_direction = "down",
-    update_on_change = true,
-    on_submit = false,
-    tag_styles = {}
-  } = props.args;
+  const args = props.args;
   
   // Track rendered status for safe effect handling
   const [isRendered, setIsRendered] = useState(false);
 
-  // Setup hooks
-  const { 
+  const {
     value: inputValue, 
     cursorPosition,
     handleChange, 
     handleSubmit,
     setValueAndCursor 
-  } = useInputValue(value, debounce, update_on_change);
+  } = useInputValue(args.value, args.debounce, args.update_on_change);
   
   const {
     showSuggestions,
@@ -62,13 +45,13 @@ export const Autocomplete: React.FC<AutocompleteProps> = (props: AutocompletePro
     handleSuggestionClick,
     handleKeyNavigation,
     searchQuery
-  } = useSuggestions(inputValue, cursorPosition, trigger_chars, suggestions);
+  } = useSuggestions(inputValue, cursorPosition, args.trigger_chars, args.suggestions);
   
   const { getDropdownPosition } = useDropdownPosition(
     inputRef, 
     suggestionsRef, 
     showSuggestions, 
-    dropdown_direction
+    args.dropdown_direction
   );
   
   // Manage component height to accommodate dropdown
@@ -76,7 +59,7 @@ export const Autocomplete: React.FC<AutocompleteProps> = (props: AutocompletePro
     containerRef, 
     suggestionsRef, 
     showSuggestions, 
-    dropdown_direction
+    args.dropdown_direction
   );
   
   // On first render, notify Streamlit that the component is ready
@@ -120,7 +103,7 @@ export const Autocomplete: React.FC<AutocompleteProps> = (props: AutocompletePro
   // Handle key events for keyboard navigation
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     // Handle submission
-    if (e.key === "Enter" && on_submit && !showSuggestions) {
+    if (e.key === "Enter" && args.on_submit && !showSuggestions) {
       e.preventDefault();
       handleSubmit();
       return;
@@ -154,15 +137,15 @@ export const Autocomplete: React.FC<AutocompleteProps> = (props: AutocompletePro
 
   // Render the label if it's not hidden
   const renderLabel = () => {
-    if (label_visibility === "hidden" || label_visibility === "collapsed") {
+    if (args.label_visibility === "hidden" || args.label_visibility === "collapsed") {
       return null;
     }
     return (
       <label 
         htmlFor="autocomplete-input"
-        style={getLabelStyles(label_visibility)}
+        style={getLabelStyles(args.label_visibility)}
       >
-        {label}
+        {args.label}
       </label>
     );
   };
@@ -170,7 +153,7 @@ export const Autocomplete: React.FC<AutocompleteProps> = (props: AutocompletePro
   return (
     <div 
       ref={containerRef} 
-      style={getContainerStyles(position, width)}
+      style={getContainerStyles(args.position, args.width)}
     >
       {renderLabel()}
       
@@ -179,17 +162,17 @@ export const Autocomplete: React.FC<AutocompleteProps> = (props: AutocompletePro
         value={inputValue}
         onChange={handleChange}
         onKeyDown={handleKeyDown}
-        placeholder={placeholder}
-        disabled={disabled}
+        placeholder={args.placeholder}
+        disabled={args.disabled}
         style={getInputStyles()}
-        tagStyles={tag_styles}
-        triggerChars={trigger_chars}
+        tagStyles={args.tag_styles}
+        triggerChars={args.trigger_chars}
       />
       
       <DropdownPortal
-        showSuggestions={showSuggestions && isRendered && !disabled}
+        showSuggestions={showSuggestions && isRendered && !args.disabled}
         suggestionsRef={suggestionsRef}
-        dropdownDirection={dropdown_direction}
+        dropdownDirection={args.dropdown_direction}
         position={getDropdownPosition()}
         activeSuggestions={activeSuggestions}
         selectedSuggestionIndex={selectedSuggestionIndex}
