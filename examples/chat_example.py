@@ -33,7 +33,7 @@ def main():
     display_previous()
 
     st_autocomplete(
-        label="",
+        label="hello",
         value="",
         trigger_chars=["#", "@"],
         suggestions=suggestions,
