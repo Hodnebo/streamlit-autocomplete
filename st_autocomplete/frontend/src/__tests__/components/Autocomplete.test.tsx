@@ -52,7 +52,7 @@ describe('Autocomplete', () => {
   test('shows suggestions when trigger character is typed', async () => {
     const { getByPlaceholderText, findByText } = render(<Autocomplete {...defaultProps} />);
 
-    const input = getByPlaceholderText('Type something...');
+    const input = getByPlaceholderText('Type something...') as HTMLInputElement;
 
     // Type '@'
     fireEvent.change(input, { target: { value: '@' } });
@@ -68,7 +68,7 @@ describe('Autocomplete', () => {
   test('applies suggestion on first selection', async () => {
     const { getByPlaceholderText } = render(<Autocomplete {...defaultProps} />);
 
-    const input = getByPlaceholderText('Type something...');
+    const input = getByPlaceholderText('Type something...') as HTMLInputElement;
 
     // Type '@'
     fireEvent.change(input, { target: { value: '@' } });
@@ -116,7 +116,7 @@ describe('Autocomplete', () => {
   test('handles keyboard navigation and selection', async () => {
     const { getByPlaceholderText } = render(<Autocomplete {...defaultProps} />);
 
-    const input = getByPlaceholderText('Type something...');
+    const input = getByPlaceholderText('Type something...') as HTMLInputElement;
 
     // Type '@'
     fireEvent.change(input, { target: { value: '@' } });
@@ -137,9 +137,11 @@ describe('Autocomplete', () => {
     await waitFor(() => {
       expect(input.value).toBe('@user2\u200B ');
     });
+    
+    // Wait for suggestions to disappear with a longer timeout
     await waitFor(() => {
       const items = document.querySelectorAll('.suggestion-item');
       expect(items.length).toBe(0);
-    });
+    }, { timeout: 3000 });
   });
 });

@@ -106,6 +106,8 @@ export const useSuggestions = (
                     selectedSuggestionIndex >= 0 &&
                     selectedSuggestionIndex < activeSuggestions.length
                 ) {
+                    // Immediately close the suggestions
+                    setShowSuggestions(false);
                     return handleSuggestionClick(activeSuggestions[selectedSuggestionIndex]);
                 }
                 return null;
