@@ -1,3 +1,24 @@
+# [2.0.0](https://github.com/Hodnebo/streamlit-autocomplete/compare/v1.0.2...v2.0.0) (2025-03-06)
+
+
+* feat!: remove useless debounce/update_on_change functionality BREAKING CHANGE: removing parameter for debounce and update_on_change ([31c7ef5](https://github.com/Hodnebo/streamlit-autocomplete/commit/31c7ef5a74939665932db333be21710d3d8d9d2e))
+
+
+### Bug Fixes
+
+* force DOM update to avoid having to submit suggestion twice ([81529e5](https://github.com/Hodnebo/streamlit-autocomplete/commit/81529e5fe35f08500e82aa413c7c059f8b519d97))
+* set showsuggestions right away when first submitting ([377d7fd](https://github.com/Hodnebo/streamlit-autocomplete/commit/377d7fd5b1059d2515dfd0f59a9b7199c13cbb6d))
+
+
+### Features
+
+* use more complex filterSuggestions function that works with non-subsequent matches ([d7c294a](https://github.com/Hodnebo/streamlit-autocomplete/commit/d7c294a9632da1f80ff3a812aabfe7906f7ad5be))
+
+
+### BREAKING CHANGES
+
+* removing parameter for debounce and update_on_change
+
 ## [1.0.2](https://github.com/Hodnebo/streamlit-autocomplete/compare/v1.0.1...v1.0.2) (2025-03-03)
 
 
