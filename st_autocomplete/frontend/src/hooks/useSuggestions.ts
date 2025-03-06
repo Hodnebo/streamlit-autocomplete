@@ -78,6 +78,11 @@ export const useSuggestions = (
 
         // Close suggestions immediately
         setShowSuggestions(false);
+        
+        // Force the DOM to update immediately to avoid having to submit suggestion twice
+        setTimeout(() => {
+            setShowSuggestions(false);
+        }, 0);
 
         return {newValue, newCursorPos};
     }, [activeTrigger, triggerStartPosition, value, cursorPosition]);
@@ -106,8 +111,6 @@ export const useSuggestions = (
                     selectedSuggestionIndex >= 0 &&
                     selectedSuggestionIndex < activeSuggestions.length
                 ) {
-                    // Immediately close the suggestions
-                    setShowSuggestions(false);
                     return handleSuggestionClick(activeSuggestions[selectedSuggestionIndex]);
                 }
                 return null;
