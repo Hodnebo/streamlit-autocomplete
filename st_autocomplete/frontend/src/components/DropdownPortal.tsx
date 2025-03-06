@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { getPortalContainer } from '../utils/domUtils';
 import SuggestionsList from './SuggestionsList';
 
-interface DropdownPortalProps {
+export interface DropdownPortalProps {
   showSuggestions: boolean;
   suggestionsRef: RefObject<HTMLDivElement>;
   dropdownDirection: string;
@@ -18,34 +18,24 @@ interface DropdownPortalProps {
 /**
  * Component for rendering suggestion dropdowns, with portal support for 'up' direction
  */
-const DropdownPortal: React.FC<DropdownPortalProps> = ({
-  showSuggestions,
-  suggestionsRef,
-  dropdownDirection,
-  position,
-  activeSuggestions,
-  selectedSuggestionIndex,
-  onSelect,
-  onHover,
-  searchQuery
-}) => {
+const DropdownPortal: React.FC<DropdownPortalProps> = (props: DropdownPortalProps) => {
   // Create a ref to the active suggestion item
   const selectedItemRef = useRef<HTMLDivElement | null>(null);
-  const prevSuggestionsLength = useRef<number>(activeSuggestions.length);
+  const prevSuggestionsLength = useRef<number>(props.activeSuggestions.length);
   
   // Effect to scroll the dropdown to keep the selected item in view
   useEffect(() => {
-    if (!showSuggestions || !suggestionsRef.current || activeSuggestions.length === 0) return;
+    if (!props.showSuggestions || !props.suggestionsRef.current || props.activeSuggestions.length === 0) return;
     
     // Find the currently selected item
-    const selectedItem = suggestionsRef.current.querySelector(`.suggestion-item[data-index="${selectedSuggestionIndex}"]`);
+    const selectedItem = props.suggestionsRef.current.querySelector(`.suggestion-item[data-index="${props.selectedSuggestionIndex}"]`);
     if (!selectedItem) return;
     
     // Store a reference to the selected item
     selectedItemRef.current = selectedItem as HTMLDivElement;
     
     // Calculate if the item is in view
-    const dropdownRect = suggestionsRef.current.getBoundingClientRect();
+    const dropdownRect = props.suggestionsRef.current.getBoundingClientRect();
     const selectedItemRect = selectedItem.getBoundingClientRect();
     
     // Check if the item is outside the visible area
@@ -55,52 +45,52 @@ const DropdownPortal: React.FC<DropdownPortalProps> = ({
     // Scroll to make the item visible
     if (isAbove) {
       // Scroll so the item is at the top
-      suggestionsRef.current.scrollTop += selectedItemRect.top - dropdownRect.top;
+      props.suggestionsRef.current.scrollTop += selectedItemRect.top - dropdownRect.top;
     } else if (isBelow) {
       // Scroll so the item is at the bottom
-      suggestionsRef.current.scrollTop += selectedItemRect.bottom - dropdownRect.bottom;
+      props.suggestionsRef.current.scrollTop += selectedItemRect.bottom - dropdownRect.bottom;
     }
     
     // Track changes in suggestions list length for recalculating position
-    prevSuggestionsLength.current = activeSuggestions.length;
+    prevSuggestionsLength.current = props.activeSuggestions.length;
     
-  }, [showSuggestions, selectedSuggestionIndex, activeSuggestions, suggestionsRef]);
+  }, [props.showSuggestions, props.selectedSuggestionIndex, props.activeSuggestions, props.suggestionsRef]);
 
-  if (!showSuggestions) return null;
+  if (!props.showSuggestions) return null;
 
   const dropdownContent = (
     <div
-      ref={suggestionsRef}
+      ref={props.suggestionsRef}
       className="suggestions-dropdown"
-      data-direction={dropdownDirection}
+      data-direction={props.dropdownDirection}
       style={{
-        position: dropdownDirection === 'up' ? 'fixed' : 'absolute',
-        top: position.top,
+        position: "absolute",
+        top: props.position.top,
         bottom: 'auto',
-        left: position.left,
-        width: position.width,
+        left: props.position.left,
+        width: props.position.width,
         maxHeight: "300px",
         overflowY: "auto",
         backgroundColor: "white",
         border: "1px solid #ccc",
         borderRadius: "0.25rem",
         boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
-        zIndex: dropdownDirection === 'up' ? 10000 : 9999,
-        margin: dropdownDirection === 'down' ? '0.25rem 0 0 0' : '0 0 0.25rem 0'
+        zIndex: props.dropdownDirection === 'up' ? 10000 : 9999,
+        margin: props.dropdownDirection === 'down' ? '0.25rem 0 0 0' : '0 0 0.25rem 0'
       }}
     >
       <SuggestionsList
-        suggestions={activeSuggestions}
-        selectedIndex={selectedSuggestionIndex}
-        onSelect={onSelect}
-        onHover={onHover}
-        searchQuery={searchQuery}
+        suggestions={props.activeSuggestions}
+        selectedIndex={props.selectedSuggestionIndex}
+        onSelect={props.onSelect}
+        onHover={props.onHover}
+        searchQuery={props.searchQuery}
       />
     </div>
   );
 
   // Use portal for 'up' direction to ensure visibility
-  return dropdownDirection === 'up'
+  return props.dropdownDirection === 'up'
     ? ReactDOM.createPortal(dropdownContent, getPortalContainer())
     : dropdownContent;
 };
