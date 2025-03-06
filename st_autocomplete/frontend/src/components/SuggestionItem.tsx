@@ -1,5 +1,5 @@
 import React from "react";
-import { SuggestionItemProps } from "../types/index";
+import { SuggestionItemProps } from "../types";
 
 /**
  * Helper function to highlight matching text
@@ -18,8 +18,6 @@ const highlightMatch = (text: string, query: string): React.ReactNode => {
     return text;
   }
 
-  // Try different matching strategies
-  
   // First, try exact match with spaces
   const exactIndex = normalizedText.indexOf(query.toLowerCase());
   if (exactIndex >= 0) {
