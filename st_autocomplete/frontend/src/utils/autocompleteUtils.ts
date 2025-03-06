@@ -76,53 +76,11 @@ export const calculateCursorPosition = (
   return triggerStartPosition + trigger.length + suggestion.length + 2;
 };
 
-/**
- * Filter suggestions based on input
- */
-export const filterSuggestions = (suggestions: string[], query: string): string[] => {
-  if (!query) return suggestions;
-  
-  // Normalize query for more consistent matching
-  const normalizedQuery = query.toLowerCase().trim();
-  
-  // Match strategies with scoring:
-  // 1. Exact match (highest priority)
-  // 2. Starts with query
-  // 3. Contains query
-  const scoredMatches = suggestions
-    .map(suggestion => {
-      const normalizedSuggestion = suggestion.toLowerCase();
-      let score = 0;
-      
-      // Exact match
-      if (normalizedSuggestion === normalizedQuery) {
-        score = 100;
-      }
-      // Starts with query
-      else if (normalizedSuggestion.startsWith(normalizedQuery)) {
-        score = 50;
-      }
-      // Contains query
-      else if (normalizedSuggestion.includes(normalizedQuery)) {
-        score = 25;
-      }
-      // No match
-      else {
-        score = 0;
-      }
-      
-      return { suggestion, score };
-    })
-    .filter(item => item.score > 0)  // Remove non-matches
-    .sort((a, b) => b.score - a.score);  // Sort by score (descending)
-  
-  return scoredMatches.map(item => item.suggestion);
-};
 
 /**
  * Filters suggestions based on query text
  */
-export const filterSuggestionsBasedOnQuery = (
+export const filterSuggestions = (
   availableSuggestions: string[], 
   query: string
 ): string[] => {

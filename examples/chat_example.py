@@ -33,7 +33,7 @@ def main():
     display_previous()
 
     st_autocomplete(
-        label="",
+        label="hello",
         value="",
         trigger_chars=["#", "@"],
         suggestions=suggestions,
@@ -54,7 +54,7 @@ def handle_message(message: str):
             st.markdown(user_message["content"])
         with st.chat_message("assistant", avatar="🤖"):
             answer = st.write_stream(get_streaming_response(message))
-    st.session_state.messages.append({"role": "assistant", "content": answer[-1]})
+    st.session_state.messages.append({"role": "assistant", "content": answer})
 
 
 def display_previous():
@@ -70,6 +70,7 @@ tags = [
     "question", "help", "issue", "feature", "bug", "documentation",
     "enhancement", "support", "avtale: ansatt pluss", "task: urgent",
     "area: frontend", "status: ready",
+    "react", "javascript", "typescript", "python", "java", "c++",
 ]
 
 
