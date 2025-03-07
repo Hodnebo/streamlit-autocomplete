@@ -1,7 +1,10 @@
-import React, { RefObject, useEffect, useRef, useLayoutEffect } from 'react';
+import React, { RefObject, useRef, useCallback } from 'react';
 import ReactDOM from 'react-dom';
 import { getPortalContainer } from '../utils/domUtils';
 import SuggestionsList from './SuggestionsList';
+import { useResizeObserver } from '../hooks/useResizeObserver';
+import { useSuggestionsChangeDetector } from '../hooks/useSuggestionsChangeDetector';
+import { useSuggestionScroll } from '../hooks/useSuggestionScroll';
 
 export interface DropdownPortalProps {
   showSuggestions: boolean;
@@ -19,92 +22,40 @@ export interface DropdownPortalProps {
  * Component for rendering suggestion dropdowns, with portal support for 'up' direction
  */
 const DropdownPortal: React.FC<DropdownPortalProps> = (props: DropdownPortalProps) => {
-  // Create a ref to the active suggestion item
-  const selectedItemRef = useRef<HTMLDivElement | null>(null);
-  const prevSuggestionsLength = useRef<number>(props.activeSuggestions.length);
-  const resizeObserverRef = useRef<ResizeObserver | null>(null);
-  
-  // Effect to scroll the dropdown to keep the selected item in view
-  useEffect(() => {
-    if (!props.showSuggestions || !props.suggestionsRef.current || props.activeSuggestions.length === 0) return;
-    
-    // Find the currently selected item
-    const selectedItem = props.suggestionsRef.current.querySelector(`.suggestion-item[data-index="${props.selectedSuggestionIndex}"]`);
-    if (!selectedItem) return;
-    
-    // Store a reference to the selected item
-    selectedItemRef.current = selectedItem as HTMLDivElement;
-    
-    // Calculate if the item is in view
-    const dropdownRect = props.suggestionsRef.current.getBoundingClientRect();
-    const selectedItemRect = selectedItem.getBoundingClientRect();
-    
-    // Check if the item is outside the visible area
-    const isAbove = selectedItemRect.top < dropdownRect.top;
-    const isBelow = selectedItemRect.bottom > dropdownRect.bottom;
-    
-    // Scroll to make the item visible
-    if (isAbove) {
-      // Scroll so the item is at the top
-      props.suggestionsRef.current.scrollTop += selectedItemRect.top - dropdownRect.top;
-    } else if (isBelow) {
-      // Scroll so the item is at the bottom
-      props.suggestionsRef.current.scrollTop += selectedItemRect.bottom - dropdownRect.bottom;
-    }
-    
-  }, [props.selectedSuggestionIndex, props.activeSuggestions, props.suggestionsRef, props.showSuggestions]);
-  
-  // Track changes in the suggestions list length
-  useEffect(() => {
-    // Check if the number of suggestions changed
-    if (prevSuggestionsLength.current !== props.activeSuggestions.length) {
-      prevSuggestionsLength.current = props.activeSuggestions.length;
-      
+  // Detect changes in suggestions count
+  useSuggestionsChangeDetector(
+    props.activeSuggestions.length,
+    useCallback((prevCount, currentCount) => {
       // Force a reflow/layout calculation
       if (props.suggestionsRef.current) {
         // This will trigger a reflow
         void props.suggestionsRef.current.getBoundingClientRect();
       }
-      
-      // Dispatch a custom event that useDropdownPosition can listen for
-      const event = new CustomEvent('suggestionsListChanged', {
-        detail: { count: props.activeSuggestions.length }
-      });
-      window.dispatchEvent(event);
-    }
-  }, [props.activeSuggestions.length, props.suggestionsRef]);
+    }, [props.suggestionsRef])
+  );
   
-  // Set up resize observer to detect content size changes
-  useEffect(() => {
-    // Skip if no support or already set up
-    if (!window.ResizeObserver || !props.suggestionsRef.current || resizeObserverRef.current) return;
-    
-    const observer = new ResizeObserver(entries => {
-      for (const entry of entries) {
-        // Trigger a custom event with the new size
-        window.dispatchEvent(new CustomEvent('dropdownResized', {
-          detail: { height: entry.contentRect.height }
-        }));
-      }
-    });
-    
-    // Store the observer
-    resizeObserverRef.current = observer;
-    
-    // Setup observer
-    if (props.showSuggestions && props.suggestionsRef.current) {
-      observer.observe(props.suggestionsRef.current);
-    }
-    
-    // Cleanup
-    return () => {
-      if (resizeObserverRef.current) {
-        resizeObserverRef.current.disconnect();
-        resizeObserverRef.current = null;
-      }
-    };
-  }, [props.showSuggestions, props.suggestionsRef]);
+  // Observe size changes in the dropdown
+  useResizeObserver(
+    props.suggestionsRef as RefObject<HTMLElement>,
+    useCallback((width, height) => {
+      // Notify of size change via custom event
+      window.dispatchEvent(new CustomEvent('dropdownResized', {
+        detail: { width, height }
+      }));
+    }, []),
+    props.showSuggestions
+  );
+  
+  // Handle scrolling to keep selected item in view
+  useSuggestionScroll(
+    props.suggestionsRef as RefObject<HTMLElement>,
+    props.selectedSuggestionIndex,
+    '.suggestion-item',
+    props.activeSuggestions.length,
+    props.showSuggestions
+  );
 
+  // Don't render anything if suggestions shouldn't be shown
   if (!props.showSuggestions) return null;
 
   const dropdownContent = (
