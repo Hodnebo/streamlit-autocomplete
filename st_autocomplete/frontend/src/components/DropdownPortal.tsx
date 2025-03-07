@@ -22,13 +22,14 @@ export interface DropdownPortalProps {
  * Component for rendering suggestion dropdowns, with portal support for 'up' direction
  */
 const DropdownPortal: React.FC<DropdownPortalProps> = (props: DropdownPortalProps) => {
-  // Detect changes in suggestions count
+
   useSuggestionsChangeDetector(
     props.activeSuggestions.length,
     useCallback((prevCount, currentCount) => {
-      // Force a reflow/layout calculation
-      if (props.suggestionsRef.current) {
-        // This will trigger a reflow
+      // Only force reflow when count changes significantly
+      // Most critical when count decreases (dropdown gets smaller)
+      if (currentCount < prevCount && props.suggestionsRef.current) {
+        // This will trigger a reflow to ensure proper positioning after height change
         void props.suggestionsRef.current.getBoundingClientRect();
       }
     }, [props.suggestionsRef])
