@@ -5,17 +5,17 @@ import { CSSProperties } from 'react';
  */
 export const getContainerStyles = (position: string, width: string): CSSProperties => {
   const baseStyles: CSSProperties = {
-    fontFamily: "sans-serif",
-    position: "relative",
+    fontFamily: 'sans-serif',
+    position: 'relative',
     width: width,
-    minHeight: "60px",
+    minHeight: '60px',
     zIndex: 1,
   };
 
   if (position === 'bottom') {
     return {
       ...baseStyles,
-      position: 'fixed',
+      position: 'absolute',
       bottom: 0,
       left: 0,
       right: 0,
@@ -35,9 +35,9 @@ export const getContainerStyles = (position: string, width: string): CSSProperti
  */
 export const getLabelStyles = (labelVisibility: string): CSSProperties => {
   return {
-    display: labelVisibility === "hidden" ? "none" : "block",
-    marginBottom: "0.5rem",
-    fontWeight: 600
+    display: labelVisibility === 'hidden' ? 'none' : 'block',
+    marginBottom: '0.5rem',
+    fontWeight: 600,
   };
 };
 
@@ -46,11 +46,11 @@ export const getLabelStyles = (labelVisibility: string): CSSProperties => {
  */
 export const getInputStyles = (): CSSProperties => {
   return {
-    width: "100%",
-    padding: "0.5rem",
-    borderRadius: "0.25rem",
-    border: "1px solid #ccc",
-    fontSize: "1rem",
-    boxSizing: "border-box"
+    width: '100%',
+    padding: '0.5rem',
+    borderRadius: '0.25rem',
+    border: '1px solid #ccc',
+    fontSize: '1rem',
+    boxSizing: 'border-box',
   };
-}; 
+};

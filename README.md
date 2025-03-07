@@ -111,7 +111,7 @@ with st.form("my_form"):
         key="form_input",
         update_on_change=False  # Prevents interruptions during streaming
     )
-    
+
     submit_button = st.form_submit_button("Submit")
 ```
 
@@ -154,7 +154,7 @@ MIT
 
 ## Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request. 
+Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## Version Management
 
@@ -169,4 +169,4 @@ When you make commits, use the following prefixes to control version bumping:
 - `perf:` - A code change that improves performance (patch version bump)
 - `test:` - Adding missing tests or correcting existing tests (no version bump)
 - `chore:` - Changes to the build process or auxiliary tools (no version bump)
-- `BREAKING CHANGE:` - In the commit body or footer, triggers a major version bump 
+- `BREAKING CHANGE:` - In the commit body or footer, triggers a major version bump

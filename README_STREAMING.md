@@ -48,7 +48,7 @@ Wrap your input in a Streamlit form to control when the app reruns:
 with st.form(key="message_form"):
     user_input = st_autocomplete(...)
     submit_button = st.form_submit_button("Send")
-    
+
     if submit_button and user_input:
         # Process the input
 ```
@@ -90,4 +90,4 @@ See the file `examples/simple_autocomplete_example.py` for a complete working ex
 
 ## Compatibility
 
-This feature is compatible with Streamlit 1.10.0 and above. 
+This feature is compatible with Streamlit 1.10.0 and above.

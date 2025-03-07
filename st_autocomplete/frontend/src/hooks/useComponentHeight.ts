@@ -1,4 +1,4 @@
-import { useEffect, RefObject } from 'react';
+import { RefObject, useEffect } from 'react';
 import { Streamlit } from 'streamlit-component-lib';
 
 /**
@@ -20,17 +20,17 @@ export const useComponentHeight = (
     // Calculate the height based on the container's height
     if (containerRef.current) {
       let height = containerRef.current.offsetHeight;
-      
+
       // If suggestions are visible, add extra height to accommodate them (only for 'down' direction)
       if (showSuggestions && suggestionsRef.current && dropdownDirection === 'down') {
         const suggestionsHeight = Math.min(suggestionsRef.current.scrollHeight, 300);
         height += suggestionsHeight + 10; // Add some padding
       }
-      
+
       // Ensure a minimum height
       Streamlit.setFrameHeight(Math.max(height, 60));
     } else {
       Streamlit.setFrameHeight(60);
     }
   }, [showSuggestions, containerRef, suggestionsRef, dropdownDirection]);
-}; 
+};

@@ -35,7 +35,7 @@ jobs:
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
-          node-version: "21.x"
+          node-version: '21.x'
           registry-url: https://npm.pkg.github.com
 
       - name: Build the project
@@ -43,7 +43,7 @@ jobs:
         env:
           CI: false
           DISABLE_ESLINT_PLUGIN: true
-        
+
       - name: Add built files to git
         run: |
           git add -f st_autocomplete/frontend/build/

@@ -1,4 +1,5 @@
-import { ComponentProps } from "streamlit-component-lib";
+import { ComponentProps } from 'streamlit-component-lib';
+import { RefObject } from 'react';
 
 export interface AutocompleteProps extends ComponentProps {
   args: {
@@ -13,8 +14,8 @@ export interface AutocompleteProps extends ComponentProps {
     position: string; // 'static', 'bottom', or 'inline'
     width: string; // CSS width value like '100%', '300px', etc.
     dropdown_direction: string; // 'up' or 'down' to control where suggestions appear
-    tag_styles?: Record<string, { backgroundColor?: string; color?: string; }>; // Styles for each trigger character
-  }
+    tag_styles?: Record<string, { backgroundColor?: string; color?: string }>; // Styles for each trigger character
+  };
 }
 
 export interface SuggestionItemProps {
@@ -39,4 +40,16 @@ export interface TriggerInfo {
   triggerChar: string | null;
   triggerPos: number;
   textAfterTrigger: string;
-} 
+}
+
+export interface DropdownPortalProps {
+  showSuggestions: boolean;
+  suggestionsRef: RefObject<HTMLDivElement>;
+  dropdownDirection: string;
+  position: { top: string; left: string; width: string };
+  activeSuggestions: string[];
+  selectedSuggestionIndex: number;
+  onSelect: (suggestion: string) => void;
+  onHover: (index: number) => void;
+  searchQuery?: string;
+}
