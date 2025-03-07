@@ -1,5 +1,5 @@
 import React from "react";
-import { SuggestionsListProps } from "../types/index";
+import { SuggestionsListProps } from "../types";
 import SuggestionItem from "./SuggestionItem";
 
 /**
