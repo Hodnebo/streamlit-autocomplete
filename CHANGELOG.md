@@ -1,3 +1,13 @@
+## [2.0.1](https://github.com/Hodnebo/streamlit-autocomplete/compare/v2.0.0...v2.0.1) (2025-03-07)
+
+
+### Bug Fixes
+
+* add new compiled files ([45bea8c](https://github.com/Hodnebo/streamlit-autocomplete/commit/45bea8c8d15fc676c10776285079bbfb611a6e0a))
+* make dropdown reposition when suggestion amount changes ([1f91609](https://github.com/Hodnebo/streamlit-autocomplete/commit/1f91609e78699f60f874fc81239e8ca01e272036))
+* make portal position fixed above input field regardless of direction ([94e2a82](https://github.com/Hodnebo/streamlit-autocomplete/commit/94e2a82a8f4ad8985ff98bb9a379b47b0587e905))
+* make reposition work when reduction in suggestions ([671c5c5](https://github.com/Hodnebo/streamlit-autocomplete/commit/671c5c5fff1e11c1cdff694ed17440a7de097e4c))
+
 # [2.0.0](https://github.com/Hodnebo/streamlit-autocomplete/compare/v1.0.2...v2.0.0) (2025-03-06)
 
 

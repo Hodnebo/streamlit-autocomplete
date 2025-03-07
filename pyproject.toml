@@ -1,6 +1,6 @@
 [project]
 name = "streamlit-autocomplete"
-version = "2.0.0"
+version = "2.0.1"
 description = "Streamlit component for text input with autocomplete suggestions"
 readme = "README.md"
 requires-python = ">=3.9"
