@@ -1,4 +1,4 @@
-import React, { RefObject, useEffect, useRef } from 'react';
+import React, { RefObject, useEffect, useRef, useLayoutEffect } from 'react';
 import ReactDOM from 'react-dom';
 import { getPortalContainer } from '../utils/domUtils';
 import SuggestionsList from './SuggestionsList';
@@ -22,6 +22,7 @@ const DropdownPortal: React.FC<DropdownPortalProps> = (props: DropdownPortalProp
   // Create a ref to the active suggestion item
   const selectedItemRef = useRef<HTMLDivElement | null>(null);
   const prevSuggestionsLength = useRef<number>(props.activeSuggestions.length);
+  const resizeObserverRef = useRef<ResizeObserver | null>(null);
   
   // Effect to scroll the dropdown to keep the selected item in view
   useEffect(() => {
@@ -51,10 +52,58 @@ const DropdownPortal: React.FC<DropdownPortalProps> = (props: DropdownPortalProp
       props.suggestionsRef.current.scrollTop += selectedItemRect.bottom - dropdownRect.bottom;
     }
     
-    // Track changes in suggestions list length for recalculating position
-    prevSuggestionsLength.current = props.activeSuggestions.length;
+  }, [props.selectedSuggestionIndex, props.activeSuggestions, props.suggestionsRef, props.showSuggestions]);
+  
+  // Track changes in the suggestions list length
+  useEffect(() => {
+    // Check if the number of suggestions changed
+    if (prevSuggestionsLength.current !== props.activeSuggestions.length) {
+      prevSuggestionsLength.current = props.activeSuggestions.length;
+      
+      // Force a reflow/layout calculation
+      if (props.suggestionsRef.current) {
+        // This will trigger a reflow
+        void props.suggestionsRef.current.getBoundingClientRect();
+      }
+      
+      // Dispatch a custom event that useDropdownPosition can listen for
+      const event = new CustomEvent('suggestionsListChanged', {
+        detail: { count: props.activeSuggestions.length }
+      });
+      window.dispatchEvent(event);
+    }
+  }, [props.activeSuggestions.length, props.suggestionsRef]);
+  
+  // Set up resize observer to detect content size changes
+  useEffect(() => {
+    // Skip if no support or already set up
+    if (!window.ResizeObserver || !props.suggestionsRef.current || resizeObserverRef.current) return;
     
-  }, [props.showSuggestions, props.selectedSuggestionIndex, props.activeSuggestions, props.suggestionsRef]);
+    const observer = new ResizeObserver(entries => {
+      for (const entry of entries) {
+        // Trigger a custom event with the new size
+        window.dispatchEvent(new CustomEvent('dropdownResized', {
+          detail: { height: entry.contentRect.height }
+        }));
+      }
+    });
+    
+    // Store the observer
+    resizeObserverRef.current = observer;
+    
+    // Setup observer
+    if (props.showSuggestions && props.suggestionsRef.current) {
+      observer.observe(props.suggestionsRef.current);
+    }
+    
+    // Cleanup
+    return () => {
+      if (resizeObserverRef.current) {
+        resizeObserverRef.current.disconnect();
+        resizeObserverRef.current = null;
+      }
+    };
+  }, [props.showSuggestions, props.suggestionsRef]);
 
   if (!props.showSuggestions) return null;
 
@@ -63,6 +112,7 @@ const DropdownPortal: React.FC<DropdownPortalProps> = (props: DropdownPortalProp
       ref={props.suggestionsRef}
       className="suggestions-dropdown"
       data-direction={props.dropdownDirection}
+      data-suggestion-count={props.activeSuggestions.length}
       style={{
         position: "absolute",
         top: props.position.top,

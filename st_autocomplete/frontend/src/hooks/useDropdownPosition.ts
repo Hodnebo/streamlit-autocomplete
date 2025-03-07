@@ -71,24 +71,53 @@ export const useDropdownPosition = (
     }
   }, [dropdownDirection, dropdownHeight, inputRef]);
   
-  // Update dropdown height when suggestions change
+  // Listen for changes in the suggestions list and recalculate position
+  useEffect(() => {
+    const handleSuggestionsChange = (event: CustomEvent) => {
+      if (showSuggestions && suggestionsRef.current) {
+        // Force a small delay to allow the DOM to update
+        requestAnimationFrame(() => {
+          const height = suggestionsRef.current?.getBoundingClientRect().height || 0;
+          if (height > 0 && height !== dropdownHeight) {
+            setDropdownHeight(height);
+            setPosition(calculatePosition());
+          }
+        });
+      }
+    };
+    
+    const handleDropdownResize = (event: CustomEvent) => {
+      const height = event.detail?.height;
+      if (height && height !== dropdownHeight) {
+        setDropdownHeight(height);
+        setPosition(calculatePosition());
+      }
+    };
+    
+    // Add event listeners
+    window.addEventListener('suggestionsListChanged', handleSuggestionsChange as EventListener);
+    window.addEventListener('dropdownResized', handleDropdownResize as EventListener);
+    
+    // Cleanup
+    return () => {
+      window.removeEventListener('suggestionsListChanged', handleSuggestionsChange as EventListener);
+      window.removeEventListener('dropdownResized', handleDropdownResize as EventListener);
+    };
+  }, [showSuggestions, suggestionsRef, calculatePosition, dropdownHeight]);
+  
+  // Update dropdown height when suggestions ref changes or visibility changes
   useEffect(() => {
     if (suggestionsRef.current && showSuggestions) {
-      // Get the current height of the suggestions list
-      const height = suggestionsRef.current.getBoundingClientRect().height;
-      setDropdownHeight(height);
-      
-      // Recalculate position with the new height
-      setPosition(calculatePosition());
+      // Need a short delay to ensure DOM has updated
+      requestAnimationFrame(() => {
+        const height = suggestionsRef.current?.getBoundingClientRect().height || 0;
+        if (height > 0 && height !== dropdownHeight) {
+          setDropdownHeight(height);
+          setPosition(calculatePosition());
+        }
+      });
     }
-  }, [showSuggestions, suggestionsRef, calculatePosition]);
-  
-  // Force position update when dropdown visibility changes
-  useEffect(() => {
-    if (showSuggestions) {
-      setPosition(calculatePosition());
-    }
-  }, [showSuggestions, calculatePosition]);
+  }, [showSuggestions, suggestionsRef, calculatePosition, dropdownHeight]);
 
   return { getDropdownPosition: () => position, dropdownHeight };
 }; 
