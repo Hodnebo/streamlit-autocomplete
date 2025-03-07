@@ -142,4 +142,10 @@ describe('filterSuggestions', () => {
         const result = filterSuggestions(suggestions, 'javascript');
         expect(result).toContain('JavaScript');
     });
+
+    test('order matters', () => {
+        const result = filterSuggestions(suggestions, 'script');
+        expect(result[0]).toBe('JavaScript');
+        expect(result[1]).toBe('TypeScript');
+    });
 });

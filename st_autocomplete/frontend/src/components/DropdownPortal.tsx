@@ -75,7 +75,7 @@ const DropdownPortal: React.FC<DropdownPortalProps> = (props: DropdownPortalProp
         border: "1px solid #ccc",
         borderRadius: "0.25rem",
         boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
-        zIndex: props.dropdownDirection === 'up' ? 10000 : 9999,
+        zIndex: 10000,
         margin: props.dropdownDirection === 'down' ? '0.25rem 0 0 0' : '0 0 0.25rem 0'
       }}
     >

@@ -4,7 +4,6 @@ Simple chat example with tag and mention autocomplete
 import streamlit as st
 
 from ai_service import get_streaming_response
-
 from st_autocomplete import st_autocomplete
 
 
@@ -36,7 +35,10 @@ def main():
         label="hello",
         value="",
         trigger_chars=["#", "@"],
-        suggestions=suggestions,
+        suggestions={
+            '@': ['user1', 'user2', 'admin'],
+            '#': ['react', 'typescript', 'javascript']
+        },
         key="chat_input",
         placeholder="Type a message (use # for tags, @ for mentions)",
         on_submit=handle_message,
@@ -64,7 +66,7 @@ def display_previous():
             with st.chat_message(message["role"], avatar="👤" if message["role"] == "user" else "🤖"):
                 st.markdown(message["content"])
 
-    
+
 # Available suggestions for autocomplete
 tags = [
     "question", "help", "issue", "feature", "bug", "documentation",
@@ -72,7 +74,6 @@ tags = [
     "area: frontend", "status: ready",
     "react", "javascript", "typescript", "python", "java", "c++",
 ]
-
 
 if __name__ == "__main__":
     main()
