@@ -1,4 +1,4 @@
-exclude_patterns: &exclude_patterns (^|/)node_modules/|^examples/|^tests/|^__tests__/|^build/
+exclude_patterns: &exclude_patterns node_modules/|examples/|tests/|__tests__/|build/
 
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
