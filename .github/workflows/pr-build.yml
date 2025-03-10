@@ -6,8 +6,8 @@ on:
       - main
 
 jobs:
-  pre-commit-checks:
-    name: Pre-commit checks
+  build:
+    name: Build
     runs-on: ubuntu-latest
     steps:
       - name: Git checkout

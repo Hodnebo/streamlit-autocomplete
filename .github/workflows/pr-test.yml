@@ -6,8 +6,8 @@ on:
       - main
 
 jobs:
-  pre-commit-checks:
-    name: Pre-commit checks
+  frontend-tests:
+    name: Frontend Tests
     runs-on: ubuntu-latest
     steps:
       - name: Git checkout
