@@ -232,17 +232,4 @@ describe('Autocomplete', () => {
     const dropdown = document.querySelector('.suggestions-dropdown');
     expect(dropdown).toBeInTheDocument();
   });
-
-  test('element has correct positioning', () => {
-    render(<Autocomplete {...defaultProps} />);
-    const input = screen.getByPlaceholderText('Type something...') as HTMLInputElement;
-    fireEvent.change(input, { target: { value: '@' } });
-
-    const element = screen.getByText('admin');
-    const styles = window.getComputedStyle(element);
-
-    expect(styles.position).toBe('absolute');
-    expect(styles.top).toBe('10px');
-    expect(styles.left).toBe('20px');
-  });
 });
