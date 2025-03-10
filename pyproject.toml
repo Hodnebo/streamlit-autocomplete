@@ -12,7 +12,7 @@ build-backend = "setuptools.build_meta"
 
 [project.optional-dependencies]
 release = [ "toml",]
-examples = [ "azure-identity", "openai", "python-dotenv",]
+examples = [ "azure-identity", "openai", "python-dotenv", "streamlit-float", "streamlit-js-eval"]
 dev = [ "pre-commit" ]
 
 [tool.setuptools]
