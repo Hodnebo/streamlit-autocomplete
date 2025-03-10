@@ -13,6 +13,7 @@ build-backend = "setuptools.build_meta"
 [project.optional-dependencies]
 release = [ "toml",]
 examples = [ "azure-identity", "openai", "python-dotenv",]
+dev = [ "pre-commit" ]
 
 [tool.setuptools]
 packages = [ "st_autocomplete",]

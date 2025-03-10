@@ -1,43 +1,43 @@
-from typing import Optional, List, Any, Dict, cast
+from typing import Any, Dict, List, Optional, cast
 
 from .callbacks import handle_callback
 from .component import component_func
 from .state import (
+    add_processed_message,
+    get_processed_messages,
     init_session_state,
     is_submitted,
     set_submitted,
-    get_processed_messages,
-    add_processed_message
 )
 from .types import (
-    SuggestionDict,
-    CallbackFunction,
     CallbackArgs,
+    CallbackFunction,
     CallbackKwargs,
+    DropdownDirection,
     LabelVisibility,
     Position,
-    DropdownDirection
+    SuggestionDict,
 )
 
 
 def st_autocomplete(
-        label: str,
-        value: str = "",
-        trigger_chars: List[str] = ["#", "@"],
-        suggestions: SuggestionDict = {"#": [], "@": []},
-        key: Optional[str] = None,
-        on_change: Optional[CallbackFunction] = None,
-        on_submit: Optional[CallbackFunction] = None,
-        args: Optional[CallbackArgs] = None,
-        kwargs: Optional[CallbackKwargs] = None,
-        *,
-        placeholder: str = "",
-        disabled: bool = False,
-        label_visibility: LabelVisibility = "visible",
-        position: Position = "static",
-        width: str = "100%",
-        dropdown_direction: DropdownDirection = "down",
-        tag_styles: Optional[Dict[str, Dict[str, str]]] = None,
+    label: str,
+    value: str = "",
+    trigger_chars: List[str] = ["#", "@"],
+    suggestions: SuggestionDict = {"#": [], "@": []},
+    key: Optional[str] = None,
+    on_change: Optional[CallbackFunction] = None,
+    on_submit: Optional[CallbackFunction] = None,
+    args: Optional[CallbackArgs] = None,
+    kwargs: Optional[CallbackKwargs] = None,
+    *,
+    placeholder: str = "",
+    disabled: bool = False,
+    label_visibility: LabelVisibility = "visible",
+    position: Position = "static",
+    width: str = "100%",
+    dropdown_direction: DropdownDirection = "down",
+    tag_styles: Optional[Dict[str, Dict[str, str]]] = None,
 ) -> str:
     """
     Create an autocomplete text input component.
@@ -95,20 +95,20 @@ def st_autocomplete(
     """
     # Initialize session state for this component
     init_session_state(key)
-    
+
     # Get current input value - use empty string if previously submitted
     current_value = "" if is_submitted(key) else value
-    
+
     # Reset submission flag
     set_submitted(key, False)
-    
+
     # Set default tag styles if not provided
     if tag_styles is None:
         tag_styles = {
             "#": {"backgroundColor": "#e8f0fe", "color": "#1a73e8"},
-            "@": {"backgroundColor": "#f0f8ff", "color": "#0366d6"}
+            "@": {"backgroundColor": "#f0f8ff", "color": "#0366d6"},
         }
-        
+
     # Call the component function
     component_value = component_func(
         label=label,
@@ -126,11 +126,11 @@ def st_autocomplete(
         tag_styles=tag_styles,
         default=current_value,
     )
-    
+
     # Process the component result
     submitted = False
     result_value = current_value
-    
+
     if isinstance(component_value, dict):
         # Safely extract values from the dictionary with type casting
         component_dict = cast(Dict[str, Any], component_value)
@@ -140,24 +140,24 @@ def st_autocomplete(
             result_value = str(component_dict["value"])
     elif component_value is not None:
         result_value = str(component_value)
-    
+
     # Handle regular value changes (not submissions)
     if not submitted and result_value != current_value and on_change is not None:
         handle_callback(on_change, result_value, args, kwargs)
-    
+
     # Handle submissions
     if submitted and result_value and result_value.strip():
         # Check if this message was already processed to avoid duplicates
         processed_messages = get_processed_messages(key)
-        
+
         if result_value not in processed_messages:
             add_processed_message(result_value, key)
-            
+
             set_submitted(key, True)
-            
+
             if on_submit is not None:
                 handle_callback(on_submit, result_value, args, kwargs)
-            
+
             # Return empty string to clear the input
             return ""
 

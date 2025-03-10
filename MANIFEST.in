@@ -17,4 +17,4 @@ exclude .github
 recursive-exclude .github *
 recursive-exclude __pycache__ *
 recursive-exclude *.egg-info *
-recursive-exclude st_autocomplete/frontend/node_modules * 
+recursive-exclude st_autocomplete/frontend/node_modules *

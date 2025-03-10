@@ -1,26 +1,22 @@
-import { renderHook, act } from '@testing-library/react-hooks';
+import { act, renderHook } from '@testing-library/react-hooks';
 import { useSuggestions } from '../../hooks/useSuggestions';
 
 describe('useSuggestions', () => {
   const triggerChars = ['@', '#'];
   const suggestions = {
     '@': ['user1', 'user2', 'admin'],
-    '#': ['react', 'typescript', 'javascript']
+    '#': ['react', 'typescript', 'javascript'],
   };
 
   test('shows no suggestions initially', () => {
-    const { result } = renderHook(() =>
-      useSuggestions('', 0, triggerChars, suggestions)
-    );
+    const { result } = renderHook(() => useSuggestions('', 0, triggerChars, suggestions));
 
     expect(result.current.showSuggestions).toBe(false);
     expect(result.current.activeSuggestions).toEqual([]);
   });
 
   test('shows suggestions when trigger character is found', () => {
-    const { result } = renderHook(() =>
-      useSuggestions('Hello @u', 8, triggerChars, suggestions)
-    );
+    const { result } = renderHook(() => useSuggestions('Hello @u', 8, triggerChars, suggestions));
 
     expect(result.current.showSuggestions).toBe(true);
     expect(result.current.activeSuggestions).toContain('user1');
@@ -39,9 +35,7 @@ describe('useSuggestions', () => {
   });
 
   test('handles keyboard navigation', () => {
-    const { result } = renderHook(() =>
-      useSuggestions('Hello @', 7, triggerChars, suggestions)
-    );
+    const { result } = renderHook(() => useSuggestions('Hello @', 7, triggerChars, suggestions));
 
     // Initial state
     expect(result.current.selectedSuggestionIndex).toBe(0);
@@ -66,9 +60,7 @@ describe('useSuggestions', () => {
   });
 
   test('handles suggestion selection on first selection', () => {
-    const { result } = renderHook(() =>
-      useSuggestions('Hello @', 7, triggerChars, suggestions)
-    );
+    const { result } = renderHook(() => useSuggestions('Hello @', 7, triggerChars, suggestions));
 
     let selection;
     act(() => {
@@ -130,9 +122,7 @@ describe('useSuggestions', () => {
     // This test specifically targets the issue where suggestions aren't applied correctly the first time
 
     // Setup the hook with a trigger character already typed
-    const { result } = renderHook(() =>
-      useSuggestions('@', 1, triggerChars, suggestions)
-    );
+    const { result } = renderHook(() => useSuggestions('@', 1, triggerChars, suggestions));
 
     // Verify initial state
     expect(result.current.showSuggestions).toBe(true);
@@ -194,6 +184,5 @@ describe('useSuggestions', () => {
     expect(selection).not.toBeNull();
     expect(result.current.showSuggestions).toBe(false);
     expect(selection?.newValue).toBe('@user1\u200B #react\u200B ');
-
   });
-}); 
+});

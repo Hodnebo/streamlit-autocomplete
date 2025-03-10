@@ -1,9 +1,10 @@
-#!/usr/bin/env python3
 """
 Script to update the version number in pyproject.toml
 Usage: python update_version.py [version]
 """
+
 import sys
+
 import toml
 
 
@@ -14,7 +15,7 @@ def update_version(version: str) -> None:
     :param version: The new version number.
     """
     version = version.lstrip("v")
-    
+
     with open("pyproject.toml", "r") as f:
         pyproject = toml.load(f)
 
@@ -22,7 +23,9 @@ def update_version(version: str) -> None:
     if "project" in pyproject:
         original_version = pyproject["project"].get("version", "unknown")
         pyproject["project"]["version"] = version
-        print(f"Updated version in [project] section from {original_version} to {version}")
+        print(
+            f"Updated version in [project] section from {original_version} to {version}"
+        )
     else:
         print("Error: Could not find [project] section in pyproject.toml")
         sys.exit(1)
@@ -36,11 +39,12 @@ def update_version(version: str) -> None:
     print(f"Version in pyproject.toml successfully updated to {version}")
 
 
-
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        print("Error: No version number provided. Usage: python update_version.py [version]")
+        print(
+            "Error: No version number provided. Usage: python update_version.py [version]"
+        )
         sys.exit(1)
 
     new_version = sys.argv[1]
-    update_version(new_version) 
+    update_version(new_version)

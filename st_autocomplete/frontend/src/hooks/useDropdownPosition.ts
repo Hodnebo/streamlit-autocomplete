@@ -1,4 +1,4 @@
-import { RefObject, useState, useEffect, useCallback, useRef } from 'react';
+import { RefObject, useCallback, useEffect, useRef, useState } from 'react';
 
 interface DropdownPosition {
   top: string;
@@ -27,27 +27,27 @@ export const useDropdownPosition = (
   const [position, setPosition] = useState<DropdownPosition>({
     top: dropdownDirection === 'up' ? '0px' : '100%',
     left: '0',
-    width: '100%'
+    width: '100%',
   });
-  
+
   // Keep a ref to the last calculation to prevent redundant updates
   const lastHeightRef = useRef<number>(dropdownHeight);
-  
+
   // Calculate dropdown position based on direction and current dimensions
   const calculatePosition = useCallback((): DropdownPosition => {
     if (!inputRef.current) {
-      return dropdownDirection === 'up' 
+      return dropdownDirection === 'up'
         ? { top: '0px', left: '0px', width: '100%' }
         : { top: '100%', left: '0', width: '100%' };
     }
 
     // Get input position
     const rect = inputRef.current.getBoundingClientRect();
-    
+
     // For upward dropdowns in an iframe, adjust coordinates
     let top = rect.top;
     let left = rect.left;
-    
+
     try {
       if (window !== window.parent && dropdownDirection === 'up') {
         const iframes = window.parent.document.querySelectorAll('iframe');
@@ -59,38 +59,45 @@ export const useDropdownPosition = (
               left += iframeRect.left;
               break;
             }
-          } catch (e) { /* Ignore access errors */ }
+          } catch (e) {
+            /* Ignore access errors */
+          }
         }
       }
-    } catch (e) { console.error('Error calculating position:', e); }
-    
+    } catch (e) {
+      console.error('Error calculating position:', e);
+    }
+
     if (dropdownDirection === 'up') {
       // For 'up' direction, position directly above the input
       return {
-        top: (top - dropdownHeight) + 'px', // Position above input
+        top: top - dropdownHeight + 'px', // Position above input
         left: left + 'px',
-        width: rect.width + 'px'
+        width: rect.width + 'px',
       };
     } else {
       // For 'down' direction, position directly below the input
       return {
         top: '100%',
         left: '0',
-        width: '100%'
+        width: '100%',
       };
     }
   }, [dropdownDirection, dropdownHeight, inputRef]);
-  
+
   // Update position when dimensions change
-  const updatePosition = useCallback((height: number) => {
-    // Only update if height has actually changed
-    if (height !== lastHeightRef.current) {
-      lastHeightRef.current = height;
-      setDropdownHeight(height);
-      setPosition(calculatePosition());
-    }
-  }, [calculatePosition]);
-  
+  const updatePosition = useCallback(
+    (height: number) => {
+      // Only update if height has actually changed
+      if (height !== lastHeightRef.current) {
+        lastHeightRef.current = height;
+        setDropdownHeight(height);
+        setPosition(calculatePosition());
+      }
+    },
+    [calculatePosition]
+  );
+
   // Listen for suggestion list change events
   useEffect(() => {
     const handleSuggestionsChange = (event: SuggestionChangeEvent) => {
@@ -104,13 +111,16 @@ export const useDropdownPosition = (
         });
       }
     };
-    
+
     window.addEventListener('suggestionsListChanged', handleSuggestionsChange as EventListener);
     return () => {
-      window.removeEventListener('suggestionsListChanged', handleSuggestionsChange as EventListener);
+      window.removeEventListener(
+        'suggestionsListChanged',
+        handleSuggestionsChange as EventListener
+      );
     };
   }, [showSuggestions, suggestionsRef, updatePosition]);
-  
+
   // Listen for resize events
   useEffect(() => {
     const handleResize = (event: DropdownResizeEvent) => {
@@ -119,13 +129,13 @@ export const useDropdownPosition = (
         updatePosition(height);
       }
     };
-    
+
     window.addEventListener('dropdownResized', handleResize as EventListener);
     return () => {
       window.removeEventListener('dropdownResized', handleResize as EventListener);
     };
   }, [updatePosition]);
-  
+
   // Update initial position when dropdown becomes visible
   useEffect(() => {
     if (showSuggestions && suggestionsRef.current) {
@@ -140,4 +150,4 @@ export const useDropdownPosition = (
   }, [showSuggestions, suggestionsRef, updatePosition]);
 
   return { getDropdownPosition: () => position, dropdownHeight };
-}; 
+};

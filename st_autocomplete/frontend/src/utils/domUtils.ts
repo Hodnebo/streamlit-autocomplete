@@ -14,7 +14,7 @@ export const getPortalContainer = () => {
   } catch (e) {
     console.error('Cannot access parent document:', e);
   }
-  
+
   let portalContainer = targetDocument.getElementById('suggestions-portal');
   if (!portalContainer) {
     portalContainer = targetDocument.createElement('div');
@@ -36,7 +36,7 @@ export const injectGlobalStyles = (position: string = 'static') => {
       min-height: 60px !important;
       overflow: visible !important;
     }
-    
+
     /* Ensure suggestions are visible */
     .suggestions-dropdown {
       z-index: 9999 !important;
@@ -50,36 +50,36 @@ export const injectGlobalStyles = (position: string = 'static') => {
       width: 100% !important;
       pointer-events: auto !important;
     }
-    
+
     /* Special handling for upward dropdowns */
     .suggestions-dropdown[data-direction="up"] {
       z-index: 10000 !important;
       transform: translateY(-2px) !important;
     }
-    
+
     /* Fix for Streamlit iframe rendering */
     .element-container iframe {
       overflow: visible !important;
     }
-    
+
     /* Allow overflow for dropdowns */
     .stApp {
       overflow: visible !important;
     }
-    
+
     /* Global portal container */
     #suggestions-portal {
       position: fixed;
       z-index: 99999;
       pointer-events: none;
     }
-    
+
     /* Portal dropdown needs pointer events */
     #suggestions-portal > div {
       pointer-events: auto;
     }
   `;
-  
+
   // Add position-specific styles
   if (position === 'bottom') {
     styleElement.innerHTML += `
@@ -87,9 +87,9 @@ export const injectGlobalStyles = (position: string = 'static') => {
       footer { display: none !important; }
     `;
   }
-  
+
   document.head.appendChild(styleElement);
-  
+
   return styleElement;
 };
 
@@ -110,6 +110,6 @@ export const injectIframeFixScript = () => {
     } catch (e) { console.error('Error modifying parent iframe:', e); }
   `;
   document.body.appendChild(script);
-  
+
   return script;
-}; 
+};

@@ -1,4 +1,4 @@
-name: PR - create release version
+name: PR - Create Release
 
 on:
   workflow_dispatch:
@@ -25,17 +25,20 @@ jobs:
           persist-credentials: true
 
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
-          python-version: '3.x'
+          python-version: '3.11'
+
+      - name: Install uv
+        run: pip install uv
 
       - name: Install Python dependencies
-        run: pip install .[release]
+        run: uv pip install --system  .[release]
 
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
-          node-version: "21.x"
+          node-version: '21.x'
           registry-url: https://npm.pkg.github.com
 
       - name: Build the project
@@ -43,7 +46,7 @@ jobs:
         env:
           CI: false
           DISABLE_ESLINT_PLUGIN: true
-        
+
       - name: Add built files to git
         run: |
           git add -f st_autocomplete/frontend/build/

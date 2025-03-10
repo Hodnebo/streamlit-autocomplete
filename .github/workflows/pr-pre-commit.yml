@@ -1,0 +1,39 @@
+name: PR - Pre-commit Checks
+on:
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  pre-commit-checks:
+    name: Pre-commit checks
+    runs-on: ubuntu-latest
+    steps:
+      - name: Git checkout
+        uses: actions/checkout@v2
+
+      - name: Install Python 3
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '21.x'
+          registry-url: https://npm.pkg.github.com
+
+      - name: Install frontend dependencies
+        run: |
+          cd st_autocomplete/frontend
+          npm install
+
+      - name: Install dependencies
+        run: |
+          pip install uv
+          uv pip install --system pre-commit
+          pre-commit install
+
+      - name: run pre-commit checks
+        run: pre-commit run --all-files

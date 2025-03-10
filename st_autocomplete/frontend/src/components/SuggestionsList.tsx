@@ -1,41 +1,45 @@
-import React from "react";
-import { SuggestionsListProps } from "../types";
-import SuggestionItem from "./SuggestionItem";
+import React from 'react';
+import { SuggestionsListProps } from '../types';
+import SuggestionItem from './SuggestionItem';
 
 /**
  * Component for rendering a list of suggestions
  */
-const SuggestionsList: React.FC<SuggestionsListProps> = ({ 
-  suggestions, 
-  selectedIndex, 
-  onSelect, 
+const SuggestionsList: React.FC<SuggestionsListProps> = ({
+  suggestions,
+  selectedIndex,
+  onSelect,
   onHover,
-  searchQuery
+  searchQuery,
 }) => {
   if (suggestions.length === 0) {
     return (
-      <div style={{ 
-        padding: "0.75rem", 
-        color: "#666", 
-        backgroundColor: "white",
-        borderRadius: "4px",
-        fontSize: "0.95rem",
-        zIndex: 10001
-      }}>
+      <div
+        style={{
+          padding: '0.75rem',
+          color: '#666',
+          backgroundColor: 'white',
+          borderRadius: '4px',
+          fontSize: '0.95rem',
+          zIndex: 10001,
+        }}
+      >
         No matching suggestions
       </div>
     );
   }
 
   return (
-    <div style={{ 
-      backgroundColor: "white", 
-      borderRadius: "4px",
-      overflow: "hidden",
-      boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-      zIndex: 10001,
-      position: "relative"
-    }}>
+    <div
+      style={{
+        backgroundColor: 'white',
+        borderRadius: '4px',
+        overflow: 'hidden',
+        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+        zIndex: 10001,
+        position: 'relative',
+      }}
+    >
       {suggestions.map((suggestion: string, index: number) => (
         <SuggestionItem
           key={suggestion}
@@ -52,4 +56,4 @@ const SuggestionsList: React.FC<SuggestionsListProps> = ({
   );
 };
 
-export default SuggestionsList; 
+export default SuggestionsList;

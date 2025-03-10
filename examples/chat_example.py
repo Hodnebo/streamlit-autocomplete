@@ -1,9 +1,10 @@
 """
 Simple chat example with tag and mention autocomplete
 """
-import streamlit as st
 
+import streamlit as st
 from ai_service import get_streaming_response
+
 from st_autocomplete import st_autocomplete
 
 
@@ -36,8 +37,8 @@ def main():
         value="",
         trigger_chars=["#", "@"],
         suggestions={
-            '@': ['user1', 'user2', 'admin'],
-            '#': ['react', 'typescript', 'javascript']
+            "@": ["user1", "user2", "admin"],
+            "#": ["react", "typescript", "javascript"],
         },
         key="chat_input",
         placeholder="Type a message (use # for tags, @ for mentions)",
@@ -63,16 +64,32 @@ def display_previous():
     """Display all previous messages in the chat container."""
     with st.session_state["chat_container"]:
         for message in st.session_state.messages:
-            with st.chat_message(message["role"], avatar="👤" if message["role"] == "user" else "🤖"):
+            with st.chat_message(
+                message["role"], avatar="👤" if message["role"] == "user" else "🤖"
+            ):
                 st.markdown(message["content"])
 
 
 # Available suggestions for autocomplete
 tags = [
-    "question", "help", "issue", "feature", "bug", "documentation",
-    "enhancement", "support", "avtale: ansatt pluss", "task: urgent",
-    "area: frontend", "status: ready",
-    "react", "javascript", "typescript", "python", "java", "c++",
+    "question",
+    "help",
+    "issue",
+    "feature",
+    "bug",
+    "documentation",
+    "enhancement",
+    "support",
+    "avtale: ansatt pluss",
+    "task: urgent",
+    "area: frontend",
+    "status: ready",
+    "react",
+    "javascript",
+    "typescript",
+    "python",
+    "java",
+    "c++",
 ]
 
 if __name__ == "__main__":

@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, fireEvent, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import StyledInput from '../../components/StyledInput';
 
 // jest-dom adds custom jest matchers for asserting on DOM nodes.
@@ -14,7 +14,7 @@ describe('StyledInput', () => {
     onChange: jest.fn(),
     onKeyDown: jest.fn(),
     placeholder: 'Type something...',
-    triggerChars: ['@', '#']
+    triggerChars: ['@', '#'],
   };
 
   test('renders input with placeholder', () => {
@@ -26,7 +26,7 @@ describe('StyledInput', () => {
   test('calls onChange when input value changes', () => {
     render(<StyledInput {...defaultProps} />);
     const input = screen.getByPlaceholderText('Type something...');
-    
+
     fireEvent.change(input, { target: { value: 'Hello' } });
     expect(defaultProps.onChange).toHaveBeenCalled();
   });
@@ -34,7 +34,7 @@ describe('StyledInput', () => {
   test('calls onKeyDown when key is pressed', () => {
     render(<StyledInput {...defaultProps} />);
     const input = screen.getByPlaceholderText('Type something...');
-    
+
     fireEvent.keyDown(input, { key: 'Enter' });
     expect(defaultProps.onKeyDown).toHaveBeenCalled();
   });
@@ -42,15 +42,15 @@ describe('StyledInput', () => {
   test('renders styled tags correctly', () => {
     // Input with a completed tag
     const valueWithTag = '@react\u200B is awesome';
-    
+
     render(
-      <StyledInput 
-        {...defaultProps} 
+      <StyledInput
+        {...defaultProps}
         value={valueWithTag}
         tagStyles={{ '@': { backgroundColor: '#e8f0fe', color: '#1a73e8' } }}
       />
     );
-    
+
     // Check that the styled overlay contains the tag
     const overlay = document.querySelector('div[style*="position: absolute"]');
     expect(overlay).toBeInTheDocument();
@@ -62,4 +62,4 @@ describe('StyledInput', () => {
     const input = screen.getByPlaceholderText('Type something...');
     expect(input).toBeDisabled();
   });
-}); 
+});
