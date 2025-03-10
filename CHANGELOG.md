@@ -1,3 +1,10 @@
+## [2.0.3](https://github.com/Hodnebo/streamlit-autocomplete/compare/v2.0.2...v2.0.3) (2025-03-10)
+
+
+### Bug Fixes
+
+* make sure suggestion list doesn't re-appear after submitting previous ([105d086](https://github.com/Hodnebo/streamlit-autocomplete/commit/105d086135d0f6203354a4e60064a6dc13bfcfa6))
+
 ## [2.0.2](https://github.com/Hodnebo/streamlit-autocomplete/compare/v2.0.1...v2.0.2) (2025-03-10)
 
 
