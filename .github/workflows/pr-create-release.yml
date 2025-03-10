@@ -30,10 +30,10 @@ jobs:
           python-version: '3.11'
 
       - name: Install uv
-        run: pip install --system uv
+        run: pip install uv
 
       - name: Install Python dependencies
-        run: uv pip install .[release]
+        run: uv pip install --system  .[release]
 
       - name: Set up Node
         uses: actions/setup-node@v4

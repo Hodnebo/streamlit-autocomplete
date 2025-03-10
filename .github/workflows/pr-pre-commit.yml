@@ -20,8 +20,8 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install --system uv
-          uv pip install pre-commit
+          pip install uv
+          uv pip install --system pre-commit
           pre-commit install
 
       - name: run pre-commit checks
