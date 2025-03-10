@@ -29,8 +29,11 @@ jobs:
         with:
           python-version: '3.11'
 
+      - name: Install uv
+        run: pip install uv
+
       - name: Install Python dependencies
-        run: pip install .[release]
+        run: uv pip install .[release]
 
       - name: Set up Node
         uses: actions/setup-node@v4
