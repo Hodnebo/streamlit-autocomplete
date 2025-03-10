@@ -20,7 +20,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install uv
+          pip install --user uv
           uv pip install pre-commit
           pre-commit install
 
