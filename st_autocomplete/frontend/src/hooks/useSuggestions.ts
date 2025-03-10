@@ -1,9 +1,10 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState, useRef } from 'react';
 import {
   calculateCursorPosition,
   filterSuggestions,
   findTriggerInfo,
   formatSuggestionForInsertion,
+  ZERO_WIDTH_SPACE,
 } from '../utils/autocompleteUtils';
 
 /**
@@ -22,6 +23,9 @@ export const useSuggestions = (
   const [triggerStartPosition, setTriggerStartPosition] = useState(-1);
   const [searchQuery, setSearchQuery] = useState('');
 
+  // Keep track of completed selections to prevent suggestions from reappearing
+  const completedSelectionsRef = useRef<Set<number>>(new Set());
+
   // Update suggestions based on input value and cursor position
   useEffect(() => {
     const { triggerChar, triggerPos, textAfterTrigger } = findTriggerInfo(
@@ -32,6 +36,25 @@ export const useSuggestions = (
 
     // If we found a trigger character
     if (triggerPos !== -1 && triggerChar) {
+      // Check if this trigger position is part of a completed selection
+      if (completedSelectionsRef.current.has(triggerPos)) {
+        // This is a completed selection, don't show suggestions
+        setShowSuggestions(false);
+        return;
+      }
+
+      // Check if this is followed by a zero-width space, which indicates
+      // a completed selection that might not be in our tracking set yet
+      if (
+        value.indexOf(ZERO_WIDTH_SPACE, triggerPos) > 0 &&
+        value.indexOf(ZERO_WIDTH_SPACE, triggerPos) < cursorPosition
+      ) {
+        // Add to completed selections
+        completedSelectionsRef.current.add(triggerPos);
+        setShowSuggestions(false);
+        return;
+      }
+
       setActiveTrigger(triggerChar);
       setTriggerStartPosition(triggerPos);
       setSearchQuery(textAfterTrigger);
@@ -70,6 +93,9 @@ export const useSuggestions = (
       // Calculate the new cursor position consistently
       const newCursorPos = calculateCursorPosition(triggerStartPosition, activeTrigger, suggestion);
 
+      // Add this trigger position to completed selections so suggestions don't reappear
+      completedSelectionsRef.current.add(triggerStartPosition);
+
       // Close suggestions immediately
       setShowSuggestions(false);
 
@@ -82,6 +108,13 @@ export const useSuggestions = (
     },
     [activeTrigger, triggerStartPosition, value, cursorPosition]
   );
+
+  // Reset completed selections when value is empty
+  useEffect(() => {
+    if (!value) {
+      completedSelectionsRef.current.clear();
+    }
+  }, [value]);
 
   // Handle keyboard navigation
   const handleKeyNavigation = (key: string) => {
