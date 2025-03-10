@@ -96,27 +96,6 @@ value = st_autocomplete(
 )
 ```
 
-## Streaming Operations
-
-To use the autocomplete with streaming operations without interruptions, set `update_on_change=False`:
-
-```python
-# Inside a form
-with st.form("my_form"):
-    st_autocomplete(
-        label="Enter your message",
-        value="",
-        trigger_chars=["#", "@"],
-        suggestions=suggestions,
-        key="form_input",
-        update_on_change=False  # Prevents interruptions during streaming
-    )
-
-    submit_button = st.form_submit_button("Submit")
-```
-
-See [README_STREAMING.md](README_STREAMING.md) for detailed instructions on using the autocomplete component with streaming operations.
-
 ## Examples
 
 The package includes several examples:
@@ -136,7 +115,6 @@ The package includes several examples:
 | `trigger_chars` | List[str] | Characters that trigger the suggestion dropdown |
 | `suggestions` | Dict[str, List[str]] | Dictionary mapping trigger characters to their suggestion lists |
 | `key` | str or None | An optional key that uniquely identifies this component |
-| `debounce` | int or None | The number of milliseconds to wait before triggering the on_change callback |
 | `on_change` | callable or None | An optional callback invoked when this text input's value changes |
 | `on_submit` | callable or None | An optional callback invoked when the user submits the input |
 | `placeholder` | str | An optional string displayed when the text input is empty |
@@ -145,7 +123,6 @@ The package includes several examples:
 | `position` | str | The position of the input ("static", "bottom", or "inline") |
 | `width` | str | CSS width value (e.g., "100%", "300px") |
 | `dropdown_direction` | str | Direction for the suggestions dropdown ("up" or "down") |
-| `update_on_change` | bool | Whether to update Streamlit on every keystroke |
 | `tag_styles` | Dict[str, Dict[str, str]] | Optional dictionary to customize the appearance of tags for each trigger character |
 
 ## License
