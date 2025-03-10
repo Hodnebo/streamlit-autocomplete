@@ -1,0 +1,26 @@
+name: PR - Frontend Tests
+on:
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  pre-commit-checks:
+    name: Pre-commit checks
+    runs-on: ubuntu-latest
+    steps:
+      - name: Git checkout
+        uses: actions/checkout@v2
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '21.x'
+          registry-url: https://npm.pkg.github.com
+
+      - name: Run frontend tests
+        run: |
+          cd st_autocomplete/frontend
+          npm install
+          npm run test
