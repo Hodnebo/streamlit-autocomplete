@@ -1,3 +1,10 @@
+## [2.0.2](https://github.com/Hodnebo/streamlit-autocomplete/compare/v2.0.1...v2.0.2) (2025-03-10)
+
+
+### Bug Fixes
+
+* add missing bundle files ([2c6a719](https://github.com/Hodnebo/streamlit-autocomplete/commit/2c6a719e0e00c9c267fd4f08f9052a958f9aecbf))
+
 ## [2.0.1](https://github.com/Hodnebo/streamlit-autocomplete/compare/v2.0.0...v2.0.1) (2025-03-07)
 
 
