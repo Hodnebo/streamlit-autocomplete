@@ -18,6 +18,12 @@ jobs:
         with:
           python-version: '3.11'
 
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '21.x'
+          registry-url: https://npm.pkg.github.com
+
       - name: Install dependencies
         run: |
           pip install uv
