@@ -43,6 +43,7 @@ export const useDropdownPosition = (
 
     // Get input position
     const rect = inputRef.current.getBoundingClientRect();
+    const inputHeight = rect.height;
 
     // For upward dropdowns in an iframe, adjust coordinates
     let top = rect.top;
@@ -69,9 +70,9 @@ export const useDropdownPosition = (
     }
 
     if (dropdownDirection === 'up') {
-      // For 'up' direction, position directly above the input
+      // For 'up' direction, position directly above the input with a safety margin
       return {
-        top: top - dropdownHeight + 'px', // Position above input
+        top: Math.max(0, top - dropdownHeight - 2) + 'px', // Position above input with 2px buffer
         left: left + 'px',
         width: rect.width + 'px',
       };
@@ -88,12 +89,12 @@ export const useDropdownPosition = (
   // Update position when dimensions change
   const updatePosition = useCallback(
     (height: number) => {
-      // Only update if height has actually changed
-      if (height !== lastHeightRef.current) {
-        lastHeightRef.current = height;
-        setDropdownHeight(height);
-        setPosition(calculatePosition());
-      }
+      // Always update when we receive a specific height instruction
+      // This ensures the dropdown is positioned correctly
+      lastHeightRef.current = height;
+      setDropdownHeight(height);
+      const newPosition = calculatePosition();
+      setPosition(newPosition);
     },
     [calculatePosition]
   );
@@ -101,18 +102,29 @@ export const useDropdownPosition = (
   // Listen for suggestion list change events
   useEffect(() => {
     const handleSuggestionsChange = (event: SuggestionChangeEvent) => {
+      const { prevCount, currentCount } = event.detail;
+
       if (showSuggestions && suggestionsRef.current) {
-        // Force a small delay to allow the DOM to update
-        requestAnimationFrame(() => {
-          // Add a second frame request to ensure the DOM has fully updated
-          // This is especially important when the list is growing
-          requestAnimationFrame(() => {
-            const height = suggestionsRef.current?.getBoundingClientRect().height || 0;
+        // Always force a position update when suggestions change
+        // Use a direct timeout approach rather than nested requestAnimationFrames
+        setTimeout(() => {
+          if (suggestionsRef.current) {
+            const height = suggestionsRef.current.getBoundingClientRect().height || 0;
             if (height > 0) {
               updatePosition(height);
+
+              // Double-check the position after a short delay to ensure it's correct
+              setTimeout(() => {
+                if (suggestionsRef.current) {
+                  const updatedHeight = suggestionsRef.current.getBoundingClientRect().height || 0;
+                  if (updatedHeight > 0 && Math.abs(updatedHeight - height) > 1) {
+                    updatePosition(updatedHeight);
+                  }
+                }
+              }, 50);
             }
-          });
-        });
+          }
+        }, 10);
       }
     };
 
@@ -125,12 +137,15 @@ export const useDropdownPosition = (
     };
   }, [showSuggestions, suggestionsRef, updatePosition]);
 
-  // Listen for resize events
+  // Listen for resize events with higher priority
   useEffect(() => {
     const handleResize = (event: DropdownResizeEvent) => {
       const { height } = event.detail;
       if (height > 0) {
-        updatePosition(height);
+        // Ensure consistent behavior by always updating
+        setTimeout(() => {
+          updatePosition(height);
+        }, 10);
       }
     };
 
@@ -143,13 +158,25 @@ export const useDropdownPosition = (
   // Update initial position when dropdown becomes visible
   useEffect(() => {
     if (showSuggestions && suggestionsRef.current) {
-      // Need a short delay to ensure DOM has updated
-      requestAnimationFrame(() => {
-        const height = suggestionsRef.current?.getBoundingClientRect().height || 0;
-        if (height > 0) {
-          updatePosition(height);
+      // Use the same direct approach for consistency
+      setTimeout(() => {
+        if (suggestionsRef.current) {
+          const height = suggestionsRef.current.getBoundingClientRect().height || 0;
+          if (height > 0) {
+            updatePosition(height);
+
+            // Double-check after a short delay
+            setTimeout(() => {
+              if (suggestionsRef.current) {
+                const updatedHeight = suggestionsRef.current.getBoundingClientRect().height || 0;
+                if (updatedHeight > 0 && Math.abs(updatedHeight - height) > 1) {
+                  updatePosition(updatedHeight);
+                }
+              }
+            }, 50);
+          }
         }
-      });
+      }, 10);
     }
   }, [showSuggestions, suggestionsRef, updatePosition]);
 

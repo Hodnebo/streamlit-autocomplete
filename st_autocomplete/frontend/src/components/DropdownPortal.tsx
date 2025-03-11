@@ -20,6 +20,18 @@ const DropdownPortal: React.FC<DropdownPortalProps> = (props: DropdownPortalProp
         if (prevCount !== currentCount && props.suggestionsRef.current) {
           // This will trigger a reflow to ensure proper positioning after height change
           void props.suggestionsRef.current.getBoundingClientRect();
+
+          // Dispatch explicit resize event to ensure positioning is updated
+          setTimeout(() => {
+            if (props.suggestionsRef.current) {
+              const rect = props.suggestionsRef.current.getBoundingClientRect();
+              window.dispatchEvent(
+                new CustomEvent('dropdownResized', {
+                  detail: { width: rect.width, height: rect.height },
+                })
+              );
+            }
+          }, 50); // Add a slight delay to ensure DOM has updated
         }
       },
       [props.suggestionsRef]
@@ -72,6 +84,8 @@ const DropdownPortal: React.FC<DropdownPortalProps> = (props: DropdownPortalProp
         boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
         zIndex: 10000,
         margin: props.dropdownDirection === 'down' ? '0.25rem 0 0 0' : '0 0 0.25rem 0',
+        // Add a small transition to make position changes smoother
+        transition: 'top 0.1s ease-out',
       }}
     >
       <SuggestionsList
