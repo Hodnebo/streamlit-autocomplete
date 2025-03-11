@@ -1,3 +1,10 @@
+## [2.0.5](https://github.com/Hodnebo/streamlit-autocomplete/compare/v2.0.4...v2.0.5) (2025-03-11)
+
+
+### Bug Fixes
+
+* make suggestionslist reposition whenever amount of suggestions increases ([8c563f4](https://github.com/Hodnebo/streamlit-autocomplete/commit/8c563f48dbe62baf15faf5328f0dfecb8a6ea03f))
+
 ## [2.0.4](https://github.com/Hodnebo/streamlit-autocomplete/compare/v2.0.3...v2.0.4) (2025-03-11)
 
 
