@@ -1,42 +1,39 @@
-import React, { RefObject, useCallback } from 'react';
+import React, { RefObject } from 'react';
 import ReactDOM from 'react-dom';
 import { getPortalContainer } from '../utils/domUtils';
 import SuggestionsList from './SuggestionsList';
 import { useResizeObserver } from '../hooks/useResizeObserver';
-import { useSuggestionsChangeDetector } from '../hooks/useSuggestionsChangeDetector';
 import { useSuggestionScroll } from '../hooks/useSuggestionScroll';
 import { DropdownPortalProps } from '../types';
+import { useSuggestionStateChange } from '../hooks/useSuggestionStateChange';
+import { useSimplifiedDropdownPosition } from '../hooks/useSimplifiedDropdownPosition';
+import { dispatchDropdownResizeEvent } from '../utils/dropdownUtils';
 
 /**
  * Component for rendering suggestion dropdowns, with portal support for 'up' direction
  */
 const DropdownPortal: React.FC<DropdownPortalProps> = (props: DropdownPortalProps) => {
-  useSuggestionsChangeDetector(
-    props.activeSuggestions.length,
-    useCallback(
-      (prevCount, currentCount) => {
-        // Trigger a reflow when count changes in either direction
-        // This ensures proper positioning after height change
-        if (prevCount !== currentCount && props.suggestionsRef.current) {
-          // This will trigger a reflow to ensure proper positioning after height change
-          void props.suggestionsRef.current.getBoundingClientRect();
-        }
-      },
-      [props.suggestionsRef]
-    )
+  // Handle suggestion state changes
+  useSuggestionStateChange(
+    props.suggestionsRef as RefObject<HTMLElement>,
+    props.activeSuggestions.length
+  );
+
+  // Get dropdown position
+  const { position } = useSimplifiedDropdownPosition(
+    props.inputRef,
+    props.suggestionsRef,
+    props.showSuggestions,
+    props.dropdownDirection
   );
 
   // Observe size changes in the dropdown
   useResizeObserver(
     props.suggestionsRef as RefObject<HTMLElement>,
-    useCallback((width, height) => {
+    (width, height) => {
       // Notify of size change via custom event
-      window.dispatchEvent(
-        new CustomEvent('dropdownResized', {
-          detail: { width, height },
-        })
-      );
-    }, []),
+      dispatchDropdownResizeEvent(width, height);
+    },
     props.showSuggestions
   );
 
@@ -60,10 +57,10 @@ const DropdownPortal: React.FC<DropdownPortalProps> = (props: DropdownPortalProp
       data-suggestion-count={props.activeSuggestions.length}
       style={{
         position: 'absolute',
-        top: props.position.top,
+        top: position.top,
         bottom: 'auto',
-        left: props.position.left,
-        width: props.position.width,
+        left: position.left,
+        width: position.width,
         maxHeight: '300px',
         overflowY: 'auto',
         backgroundColor: 'white',

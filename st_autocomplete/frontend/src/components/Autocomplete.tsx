@@ -5,7 +5,6 @@ import DropdownPortal from './DropdownPortal';
 import { getContainerStyles, getInputStyles, getLabelStyles } from '../styles/autocompleteStyles';
 import { useInputValue } from '../hooks/useInputValue';
 import { useSuggestions } from '../hooks/useSuggestions';
-import { useDropdownPosition } from '../hooks/useDropdownPosition';
 import { useComponentHeight } from '../hooks/useComponentHeight';
 import { injectGlobalStyles } from '../utils/domUtils';
 import StyledInput from './StyledInput';
@@ -43,12 +42,12 @@ export const Autocomplete: React.FC<AutocompleteProps> = (props: AutocompletePro
     searchQuery,
   } = useSuggestions(inputValue, cursorPosition, args.trigger_chars, args.suggestions);
 
-  const { getDropdownPosition } = useDropdownPosition(
-    inputRef,
-    suggestionsRef,
-    showSuggestions,
-    args.dropdown_direction
-  );
+  // Use a simple fixed position object since we're now handling positioning in DropdownPortal
+  const getDropdownPosition = () => ({
+    top: '100%',
+    left: '0',
+    width: '100%',
+  });
 
   // Manage component height to accommodate dropdown
   useComponentHeight(containerRef, suggestionsRef, showSuggestions, args.dropdown_direction);
@@ -157,6 +156,7 @@ export const Autocomplete: React.FC<AutocompleteProps> = (props: AutocompletePro
       <DropdownPortal
         showSuggestions={showSuggestions && isRendered && !args.disabled}
         suggestionsRef={suggestionsRef}
+        inputRef={inputRef}
         dropdownDirection={args.dropdown_direction}
         position={getDropdownPosition()}
         activeSuggestions={activeSuggestions}

@@ -45,6 +45,7 @@ export interface TriggerInfo {
 export interface DropdownPortalProps {
   showSuggestions: boolean;
   suggestionsRef: RefObject<HTMLDivElement>;
+  inputRef: RefObject<HTMLInputElement>;
   dropdownDirection: string;
   position: { top: string; left: string; width: string };
   activeSuggestions: string[];
