@@ -173,6 +173,31 @@ describe('Autocomplete', () => {
         });
     });
 
+    test("suggestions re-appear after deleting separator", async () => {
+        const {getByPlaceholderText} = render(<Autocomplete {...defaultProps} />);
+
+        const input = getByPlaceholderText('Type something...') as HTMLInputElement;
+
+        // Type '@'
+        fireEvent.change(input, {target: {value: '@user2'}});
+        fireEvent.keyDown(input, {key: 'Enter'});
+        expect(input.value).toBe('@user2\u200B ');
+        // Wait for suggestions to disappear
+        await waitFor(() => {
+            const items = document.querySelectorAll('.suggestion-item');
+            expect(items.length).toBe(0);
+        });
+
+        // input a character that matches with suggestions
+        fireEvent.change(input, {target: {value: '@user2'}});
+
+        // Suggestions should not appear without trigger character
+        await waitFor(() => {
+            const items = document.querySelectorAll('.suggestion-item');
+            expect(items.length).toBe(2);
+        });
+    })
+
     test('elements are positioned correctly relative to each other', () => {
         const {getByPlaceholderText} = render(<Autocomplete {...defaultProps} />);
 
