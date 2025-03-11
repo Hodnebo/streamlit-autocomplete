@@ -104,10 +104,14 @@ export const useDropdownPosition = (
       if (showSuggestions && suggestionsRef.current) {
         // Force a small delay to allow the DOM to update
         requestAnimationFrame(() => {
-          const height = suggestionsRef.current?.getBoundingClientRect().height || 0;
-          if (height > 0) {
-            updatePosition(height);
-          }
+          // Add a second frame request to ensure the DOM has fully updated
+          // This is especially important when the list is growing
+          requestAnimationFrame(() => {
+            const height = suggestionsRef.current?.getBoundingClientRect().height || 0;
+            if (height > 0) {
+              updatePosition(height);
+            }
+          });
         });
       }
     };

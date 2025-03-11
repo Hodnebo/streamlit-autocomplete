@@ -15,9 +15,9 @@ const DropdownPortal: React.FC<DropdownPortalProps> = (props: DropdownPortalProp
     props.activeSuggestions.length,
     useCallback(
       (prevCount, currentCount) => {
-        // Only force reflow when count changes significantly
-        // Most critical when count decreases (dropdown gets smaller)
-        if (currentCount < prevCount && props.suggestionsRef.current) {
+        // Trigger a reflow when count changes in either direction
+        // This ensures proper positioning after height change
+        if (prevCount !== currentCount && props.suggestionsRef.current) {
           // This will trigger a reflow to ensure proper positioning after height change
           void props.suggestionsRef.current.getBoundingClientRect();
         }
