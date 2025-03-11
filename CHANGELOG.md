@@ -1,3 +1,10 @@
+## [2.0.4](https://github.com/Hodnebo/streamlit-autocomplete/compare/v2.0.3...v2.0.4) (2025-03-11)
+
+
+### Bug Fixes
+
+* make suggestions re-appear when separator is gone ([bb8f87f](https://github.com/Hodnebo/streamlit-autocomplete/commit/bb8f87f5201bac86371ed45d7f116d0338129aec))
+
 ## [2.0.3](https://github.com/Hodnebo/streamlit-autocomplete/compare/v2.0.2...v2.0.3) (2025-03-10)
 
 
