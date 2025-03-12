@@ -1,0 +1,37 @@
+.suggestion-item {
+  padding: 0.75rem;
+  cursor: pointer;
+  background-color: white;
+  color: #333333;
+  border-bottom: 1px solid #eee;
+  transition: background-color 0.2s ease;
+  font-weight: normal;
+  font-size: 0.95rem;
+  display: block;
+  width: 100%;
+  text-align: left;
+  box-sizing: border-box;
+}
+
+.suggestion-item:last-child {
+  border-bottom: none;
+}
+
+.suggestion-item--active {
+  background-color: #e6f7ff;
+  color: #0066cc;
+  font-weight: 500;
+}
+
+.suggestion-item:hover {
+  background-color: #f5f5f5;
+}
+
+.suggestion-item--active:hover {
+  background-color: #e6f7ff;
+}
+
+.suggestion-item__match {
+  font-weight: bold;
+  text-decoration: underline;
+}

@@ -53,11 +53,12 @@ describe('Autocomplete Component', () => {
     cy.get('input').type('#');
 
     // First item should be highlighted by default
-    cy.get('.suggestion-item').first().should('have.css', 'background-color', 'rgb(230, 247, 255)');
+    cy.get('.suggestion-item--active').should('exist');
+    cy.get('.suggestion-item--active').should('contain', 'react');
 
     // Press down arrow to move to the second item
     cy.get('input').type('{downarrow}');
-    cy.get('.suggestion-item').eq(1).should('have.css', 'background-color', 'rgb(230, 247, 255)');
+    cy.get('.suggestion-item--active').should('contain', 'typescript');
 
     // Press enter to select the suggestion
     cy.get('input').type('{enter}');
@@ -84,12 +85,12 @@ describe('Autocomplete Component', () => {
     cy.contains('typescript').trigger('mouseover');
 
     // Second item should be highlighted
-    cy.get('.suggestion-item').eq(1).should('have.css', 'background-color', 'rgb(230, 247, 255)');
+    cy.get('.suggestion-item--active').should('contain', 'typescript');
 
     // Type more text that still matches the hovered item
     cy.get('input').type('ty');
 
     // The hovered item should still be highlighted
-    cy.contains('typescript').should('have.css', 'background-color', 'rgb(230, 247, 255)');
+    cy.get('.suggestion-item--active').should('contain', 'typescript');
   });
 });
