@@ -74,21 +74,6 @@ const DevRoot = () => {
       </div>
       <Autocomplete {...mockProps} />
 
-      <div style={{ marginTop: '40px', fontSize: '14px', color: '#666' }}>
-        <h3>Available triggers:</h3>
-        <ul>
-          <li>
-            <strong>#</strong> - For tags: {mockSuggestions['#'].join(', ')}
-          </li>
-          <li>
-            <strong>@</strong> - For users: {mockSuggestions['@'].join(', ')}
-          </li>
-          <li>
-            <strong>/</strong> - For commands: {mockSuggestions['/'].join(', ')}
-          </li>
-        </ul>
-      </div>
-
       <div style={{ marginTop: '20px', fontSize: '14px', color: '#666' }}>
         <p>Open your browser console to see component interactions (values, submissions, etc.)</p>
       </div>
