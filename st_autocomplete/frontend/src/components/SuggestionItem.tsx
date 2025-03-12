@@ -1,5 +1,6 @@
 import React from 'react';
 import { SuggestionItemProps } from '../types';
+import '../styles/SuggestionItem.css';
 
 /**
  * Helper function to highlight matching text
@@ -28,7 +29,7 @@ const highlightMatch = (text: string, query: string): React.ReactNode => {
     return (
       <>
         {before}
-        <span style={{ fontWeight: 'bold', textDecoration: 'underline' }}>{match}</span>
+        <span className="suggestion-item__match">{match}</span>
         {after}
       </>
     );
@@ -72,7 +73,7 @@ const highlightMatch = (text: string, query: string): React.ReactNode => {
 
         // Add the highlighted match
         parts.push(
-          <span key={i} style={{ fontWeight: 'bold', textDecoration: 'underline' }}>
+          <span key={i} className="suggestion-item__match">
             {text.substring(originalStart, originalEnd)}
           </span>
         );
@@ -102,30 +103,28 @@ const SuggestionItem: React.FC<SuggestionItemProps> = ({
   isLast,
   index,
   searchQuery,
-}) => (
-  <div
-    key={suggestion}
-    className="suggestion-item"
-    data-index={index}
-    onClick={() => onClick(suggestion)}
-    style={{
-      padding: '0.75rem',
-      cursor: 'pointer',
-      backgroundColor: isActive ? '#e6f7ff' : 'white',
-      color: isActive ? '#0066cc' : '#333333',
-      borderBottom: isLast ? 'none' : '1px solid #eee',
-      transition: 'background-color 0.2s ease',
-      fontWeight: isActive ? '500' : 'normal',
-      fontSize: '0.95rem',
-      display: 'block',
-      width: '100%',
-      textAlign: 'left',
-      boxSizing: 'border-box',
-    }}
-    onMouseEnter={onMouseEnter}
-  >
-    {searchQuery ? highlightMatch(suggestion, searchQuery) : suggestion}
-  </div>
-);
+}) => {
+  // Determine the class names
+  const classNames = [
+    'suggestion-item',
+    isActive ? 'suggestion-item--active' : '',
+    isLast ? 'suggestion-item--last' : '',
+  ]
+    .filter(Boolean)
+    .join(' ');
+
+  return (
+    <div
+      key={suggestion}
+      className={classNames}
+      data-index={index}
+      data-active={isActive}
+      onClick={() => onClick(suggestion)}
+      onMouseEnter={onMouseEnter}
+    >
+      {searchQuery ? highlightMatch(suggestion, searchQuery) : suggestion}
+    </div>
+  );
+};
 
 export default SuggestionItem;
