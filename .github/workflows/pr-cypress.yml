@@ -35,7 +35,7 @@ jobs:
           wait-on: 'http://localhost:3001'
           wait-on-timeout: 120
           browser: chrome
-          video: true
+          record: true
 
         env:
           CI: false
