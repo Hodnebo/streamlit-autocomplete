@@ -9,7 +9,8 @@ export default defineConfig({
       // implement node event listeners here
     },
   },
-  video: false, // Disable video recording for faster tests
+  projectId: 'st_autocomplete',
+  video: true,
   screenshotOnRunFailure: true,
   watchForFileChanges: true,
 });
