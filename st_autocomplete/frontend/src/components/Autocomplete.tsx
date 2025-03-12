@@ -87,6 +87,7 @@ export const Autocomplete: React.FC<AutocompleteProps> = (props: AutocompletePro
 
   // Handle hover on suggestion item
   const handleSuggestionHover = (index: number) => {
+    // We're now using the wrapped version that maintains consistency
     setSelectedSuggestionIndex(index);
   };
 

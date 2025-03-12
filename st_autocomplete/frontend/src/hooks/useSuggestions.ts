@@ -25,6 +25,12 @@ export const useSuggestions = (
 
   // Track the previous value to detect changes
   const prevValueRef = useRef(value);
+  // Track the previous suggestions list to maintain selection
+  const prevSuggestionsRef = useRef<string[]>([]);
+  // Track the user's last manually selected suggestion
+  const lastSelectedIndexRef = useRef<number>(0);
+  // Track if user has manually hovered/selected an item
+  const userInteractedRef = useRef<boolean>(false);
 
   // Update suggestions based on input value and cursor position
   useEffect(() => {
@@ -55,9 +61,46 @@ export const useSuggestions = (
       const availableSuggestions = suggestions[triggerChar] || [];
       const filteredSuggestions = filterSuggestions(availableSuggestions, textAfterTrigger);
 
+      // Store previous suggestions for comparison
+      const prevSuggestions = prevSuggestionsRef.current;
+      prevSuggestionsRef.current = filteredSuggestions;
+
+      // Set active suggestions
       setActiveSuggestions(filteredSuggestions);
-      setShowSuggestions(filteredSuggestions.length > 0);
-      setSelectedSuggestionIndex(0);
+
+      // Determine the selected index
+      if (filteredSuggestions.length > 0) {
+        // If user has manually selected something, try to maintain that selection
+        if (userInteractedRef.current && prevSuggestions.length > 0) {
+          // Find the previously selected suggestion in the new list
+          if (selectedSuggestionIndex >= 0 && selectedSuggestionIndex < prevSuggestions.length) {
+            const selectedSuggestion = prevSuggestions[selectedSuggestionIndex];
+            const newIndex = filteredSuggestions.indexOf(selectedSuggestion);
+
+            // If the suggestion still exists in the new list, use its index
+            if (newIndex >= 0) {
+              setSelectedSuggestionIndex(newIndex);
+            } else {
+              // If not found, use the last manually selected index if in range
+              const indexToUse = Math.min(
+                lastSelectedIndexRef.current,
+                filteredSuggestions.length - 1
+              );
+              setSelectedSuggestionIndex(indexToUse);
+            }
+          } else {
+            // Fallback to first suggestion if the index is invalid
+            setSelectedSuggestionIndex(0);
+          }
+        } else {
+          // If user hasn't interacted, always default to first suggestion
+          setSelectedSuggestionIndex(0);
+        }
+
+        setShowSuggestions(true);
+      } else {
+        setShowSuggestions(false);
+      }
       return;
     }
 
@@ -66,10 +109,11 @@ export const useSuggestions = (
     setActiveTrigger(null);
     setTriggerStartPosition(-1);
     setSearchQuery('');
+    userInteractedRef.current = false; // Reset interaction flag when no suggestions shown
 
     // Update the previous value reference
     prevValueRef.current = value;
-  }, [value, cursorPosition, triggerChars, suggestions]);
+  }, [value, cursorPosition, triggerChars, suggestions, selectedSuggestionIndex]);
 
   // Handle suggestion selection
   const handleSuggestionClick = useCallback(
@@ -90,11 +134,7 @@ export const useSuggestions = (
 
       // Close suggestions immediately
       setShowSuggestions(false);
-
-      // Force the DOM to update immediately to avoid having to submit suggestion twice
-      setTimeout(() => {
-        setShowSuggestions(false);
-      }, 0);
+      userInteractedRef.current = false; // Reset interaction flag after selection
 
       return { newValue, newCursorPos };
     },
@@ -105,6 +145,7 @@ export const useSuggestions = (
   useEffect(() => {
     if (!value) {
       setShowSuggestions(false);
+      userInteractedRef.current = false; // Reset interaction flag
       prevValueRef.current = '';
     }
   }, [value]);
@@ -113,15 +154,21 @@ export const useSuggestions = (
   const handleKeyNavigation = (key: string) => {
     switch (key) {
       case 'ArrowDown':
-        setSelectedSuggestionIndex((prev: number) =>
-          prev < activeSuggestions.length - 1 ? prev + 1 : 0
-        );
+        userInteractedRef.current = true; // Mark as user interaction
+        setSelectedSuggestionIndex((prev: number) => {
+          const newIndex = prev < activeSuggestions.length - 1 ? prev + 1 : 0;
+          lastSelectedIndexRef.current = newIndex; // Store last selection
+          return newIndex;
+        });
         return true;
 
       case 'ArrowUp':
-        setSelectedSuggestionIndex((prev: number) =>
-          prev > 0 ? prev - 1 : activeSuggestions.length - 1
-        );
+        userInteractedRef.current = true; // Mark as user interaction
+        setSelectedSuggestionIndex((prev: number) => {
+          const newIndex = prev > 0 ? prev - 1 : activeSuggestions.length - 1;
+          lastSelectedIndexRef.current = newIndex; // Store last selection
+          return newIndex;
+        });
         return true;
 
       case 'Enter':
@@ -139,6 +186,7 @@ export const useSuggestions = (
 
       case 'Escape':
         setShowSuggestions(false);
+        userInteractedRef.current = false; // Reset interaction flag
         return true;
 
       default:
@@ -146,11 +194,18 @@ export const useSuggestions = (
     }
   };
 
+  // Wrapper for hover to track user interaction
+  const handleSuggestionHover = useCallback((index: number) => {
+    userInteractedRef.current = true; // Mark as user interaction
+    lastSelectedIndexRef.current = index; // Store last selection
+    setSelectedSuggestionIndex(index);
+  }, []);
+
   return {
     showSuggestions,
     activeSuggestions,
     selectedSuggestionIndex,
-    setSelectedSuggestionIndex,
+    setSelectedSuggestionIndex: handleSuggestionHover, // Use the wrapper instead
     handleSuggestionClick,
     handleKeyNavigation,
     setShowSuggestions,
