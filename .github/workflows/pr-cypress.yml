@@ -36,6 +36,8 @@ jobs:
           wait-on-timeout: 120
           browser: chrome
           headless: true
+        env:
+          CI: false
 
       - name: Upload screenshots if tests fail
         uses: actions/upload-artifact@v4
